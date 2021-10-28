@@ -42,6 +42,8 @@ public:
 	// Set background color
 	void SetBackgroundColor(SDL_Color color);
 
+	void OnCollision(Collider* c1, Collider* c2) override;
+
 public:
 
 	SDL_Renderer* renderer;

@@ -26,6 +26,9 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	void OnCollision(Collider* c1, Collider* c2) override;
+
+
 	// Load Texture
 	SDL_Texture* const Load(const char* path);
 	SDL_Texture* const LoadSurface(SDL_Surface* surface);

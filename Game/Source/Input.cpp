@@ -141,6 +141,10 @@ bool Input::CleanUp()
 	return true;
 }
 
+void Input::OnCollision(Collider* c1, Collider* c2)
+{
+}
+
 
 bool Input::GetWindowEvent(EventWindow ev)
 {

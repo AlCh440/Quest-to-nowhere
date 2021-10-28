@@ -6,12 +6,16 @@
 #include "Audio.h"
 #include "Scene.h"
 #include "Player.h"
+#include "Collisions.h"
+#include "Collider.h"
 
 #include "Defs.h"
 #include "Log.h"
 
 #include <iostream>
 #include <sstream>
+
+#define FPS 60
 
 // Constructor
 App::App(int argc, char* args[]) : argc(argc), args(args)
@@ -25,6 +29,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	audio = new Audio();
 	scene = new Scene();
 	player = new Player();
+	coll = new Collisions();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -34,6 +39,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(audio);
 	AddModule(scene);
 	AddModule(player);
+	AddModule(coll);
 
 	// Render last to swap buffer
 	AddModule(render);
@@ -153,11 +159,13 @@ bool App::LoadConfig()
 // ---------------------------------------------
 void App::PrepareUpdate()
 {
+	start = SDL_GetTicks();
 }
 
 // ---------------------------------------------
 void App::FinishUpdate()
 {
+	if ((1000 / FPS) > SDL_GetTicks() - start) SDL_Delay(1000 / FPS - (SDL_GetTicks() - start));
 	// This is a good place to call Load / Save functions
 }
 

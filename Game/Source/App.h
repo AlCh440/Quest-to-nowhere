@@ -14,6 +14,7 @@ class Textures;
 class Audio;
 class Scene;
 class Player;
+class Collisions;
 
 class App
 {
@@ -76,6 +77,9 @@ public:
 	Audio* audio;
 	Scene* scene;
 	Player* player;
+	Collisions* coll;
+
+	Uint32 start;
 
 private:
 

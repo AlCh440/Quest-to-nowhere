@@ -30,6 +30,8 @@ public:
 	// Retrieve window scale
 	uint GetScale() const;
 
+	void OnCollision(Collider* c1, Collider* c2) override;
+
 public:
 	// The window we'll be rendering to
 	SDL_Window* window;

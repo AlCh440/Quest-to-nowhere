@@ -47,6 +47,8 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	void OnCollision(Collider* c1, Collider* c2) override;
+
 	// Check key states (includes mouse and joy buttons)
 	KeyState GetKey(int id) const
 	{

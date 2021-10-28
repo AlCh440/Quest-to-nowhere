@@ -2,7 +2,7 @@
 #define __MODULE_H__
 
 #include "SString.h"
-
+#include "Collider.h"
 #include "PugiXml/src/pugixml.hpp"
 
 class App;
@@ -48,6 +48,12 @@ public:
 	virtual bool PostUpdate()
 	{
 		return true;
+	}
+
+	//Collision callback, called when the player intersects with another collider
+	virtual void OnCollision(Collider* c1, Collider* c2)
+	{
+
 	}
 
 	// Called before quitting

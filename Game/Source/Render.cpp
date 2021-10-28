@@ -93,6 +93,10 @@ void Render::SetBackgroundColor(SDL_Color color)
 	background = color;
 }
 
+void Render::OnCollision(Collider* c1, Collider* c2)
+{
+}
+
 void Render::SetViewPort(const SDL_Rect& rect)
 {
 	SDL_RenderSetViewport(renderer, &rect);

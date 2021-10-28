@@ -78,3 +78,7 @@ bool Scene::CleanUp()
 
 	return true;
 }
+
+void Scene::OnCollision(Collider* c1, Collider* c2)
+{
+}

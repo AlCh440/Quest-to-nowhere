@@ -44,10 +44,10 @@ bool Window::Awake(pugi::xml_node& config)
 		//height = config.child("resolution").attribute("height").as_int(480);
 		//scale = config.child("resolution").attribute("scale").as_int(1);
 
-		scale = 2;
+		scale = 4;
 
-		width = 600 * scale;
-		height = 400 * scale;
+		width = 400 * scale;
+		height = 200 * scale;
 		
 
 		if(fullscreen == true) flags |= SDL_WINDOW_FULLSCREEN;
@@ -104,4 +104,8 @@ void Window::GetWindowSize(uint& width, uint& height) const
 uint Window::GetScale() const
 {
 	return scale;
+}
+
+void Window::OnCollision(Collider* c1, Collider* c2)
+{
 }

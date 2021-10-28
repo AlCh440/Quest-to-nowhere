@@ -176,3 +176,7 @@ bool Audio::PlayFx(unsigned int id, int repeat)
 
 	return ret;
 }
+
+void Audio::OnCollision(Collider* c1, Collider* c2)
+{
+}
