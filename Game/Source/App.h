@@ -6,6 +6,9 @@
 
 #include "PugiXml/src/pugixml.hpp"
 
+#define CONFIG_FILENAME		"config.xml"
+#define SAVE_STATE_FILENAME "save_game.xml"
+
 // Modules
 class Window;
 class Input;
@@ -15,6 +18,7 @@ class Audio;
 class Scene;
 class Player;
 class Collisions;
+class Map;
 
 class App
 {
@@ -47,10 +51,15 @@ public:
 	const char* GetTitle() const;
 	const char* GetOrganization() const;
 
+	// L02: DONE 1: Create methods to request Load / Save
+	void LoadGameRequest();
+	void SaveGameRequest() const;
+
 private:
 
 	// Load config file
-	bool LoadConfig();
+	// NOTE: It receives config document
+	pugi::xml_node LoadConfig(pugi::xml_document&) const;
 
 	// Call modules before each loop iteration
 	void PrepareUpdate();
@@ -67,6 +76,11 @@ private:
 	// Call modules after each loop iteration
 	bool PostUpdate();
 
+
+	// Load / Save
+	bool LoadGame();
+	bool SaveGame() const;
+
 public:
 
 	// Modules
@@ -78,6 +92,7 @@ public:
 	Scene* scene;
 	Player* player;
 	Collisions* coll;
+	Map* map;
 
 	Uint32 start;
 
@@ -99,8 +114,11 @@ private:
 
 	uint frames;
 	float dt;
-};
 
+	// L02: DONE 1: Create variables to control when to execute the request load / save
+	mutable bool saveGameRequested;
+	bool loadGameRequested;
+};
 extern App* app;
 
 #endif	// __APP_H__

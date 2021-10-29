@@ -50,6 +50,17 @@ public:
 		return true;
 	}
 
+	// L02: DONE 2: Create new virtual methods to Load / Save state
+	virtual bool LoadState(pugi::xml_node&)
+	{
+		return true;
+	}
+
+	virtual bool SaveState(pugi::xml_node&) const
+	{
+		return true;
+	}
+
 	//Collision callback, called when the player intersects with another collider
 	virtual void OnCollision(Collider* c1, Collider* c2)
 	{
