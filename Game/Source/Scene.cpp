@@ -6,6 +6,8 @@
 #include "Window.h"
 #include "Scene.h"
 #include "Map.h"
+#include "Player.h"
+#include "Collisions.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -13,6 +15,10 @@
 Scene::Scene() : Module()
 {
 	name.Create("scene");
+
+	win_con = false;
+	stop_game = false;
+
 }
 
 // Destructor
@@ -33,7 +39,47 @@ bool Scene::Start()
 {
 	// L03: DONE: Load map
 	app->map->Load("hello.tmx");
+	//app->map->Load("iso_nav.tmx");
 	//app->audio->PlayMusic("Assets/Audio/Music/music_spy.ogg");
+
+	app->render->camera.x = 0;
+	app->render->camera.y = -580;
+
+	left_cam = app->coll->AddCollider({ 0, 145, 80, 175 }, Collider::Type::CAM, this);
+	right_cam = app->coll->AddCollider({ 220, 100, 80, 220 }, Collider::Type::CAM, this);
+	up_cam = app->coll->AddCollider({ 0, 100, 320, 85 }, Collider::Type::CAM, this);
+	down_cam = app->coll->AddCollider({ 0, 280, 320, 40 }, Collider::Type::CAM, this);
+
+
+
+	app->coll->AddCollider({ 288, 224, 80, 48 }, Collider::Type::WALL, app->scene);
+	app->coll->AddCollider({ 416, 224, 112, 48 }, Collider::Type::WALL, app->scene);
+
+	app->coll->AddCollider({ 560, 224, 96, 96 }, Collider::Type::WALL, app->scene);
+	app->coll->AddCollider({ 704, 224, 128, 96 }, Collider::Type::WALL, app->scene);
+	app->coll->AddCollider({ 832, 192, 32, 32 }, Collider::Type::WALL, app->scene);
+	app->coll->AddCollider({ 864, 64, 16, 128 }, Collider::Type::WALL, app->scene);
+	app->coll->AddCollider({ 784, 32, 96, 32 }, Collider::Type::WALL, app->scene);
+
+	app->coll->AddCollider({ 720, 176, 80, 2 }, Collider::Type::PLAT, app->scene);
+	app->coll->AddCollider({ 624, 160, 48, 2 }, Collider::Type::PLAT, app->scene);
+	app->coll->AddCollider({ 560, 144, 48, 2 }, Collider::Type::PLAT, app->scene);
+	app->coll->AddCollider({ 496, 112, 48, 2 }, Collider::Type::PLAT, app->scene);
+	app->coll->AddCollider({ 576, 80, 96, 2 }, Collider::Type::PLAT, app->scene);
+
+	app->coll->AddCollider({ 592, 48, 16, 2 }, Collider::Type::PLAT, app->scene);
+	app->coll->AddCollider({ 624, 32, 32, 2 }, Collider::Type::PLAT, app->scene);
+
+
+	app->coll->AddCollider({ 0, 272, 528, 48 }, Collider::Type::WALL, app->scene);
+
+	// WIN / LOSERS
+	app->coll->AddCollider({528, 272, 32, 32}, Collider::Type::LOSE, app->scene);
+	app->coll->AddCollider({ 656, 272, 48, 32 }, Collider::Type::LOSE, app->scene);
+
+	app->coll->AddCollider({ 816, 0, 32, 32 }, Collider::Type::WIN, app->scene);
+
+
 	return true;
 }
 
@@ -46,24 +92,40 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-	// L02: DONE 3: Request Load / Save when pressing L/S
-	if (app->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
-		app->LoadGameRequest();
+	if (win_con)
+	{
 
+	}
+	else if (!win_con && stop_game)
+	{
+		   
+	}
+
+	if (stop_game) stop_input = true;
+	else stop_input = false;
+
+
+	// L02: DONE 3: Request Load / Save when pressing L/S
+	if (app->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN) 
+		app->LoadGameRequest();
+	
 	if (app->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN)
 		app->SaveGameRequest();
 
 	if(app->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-		app->render->camera.y -= 1;
+		app->render->camera.y -= 5;
 
-	if(app->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-		app->render->camera.y += 1;
+	if (app->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+		app->render->camera.y += 5;
 
 	if(app->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-		app->render->camera.x -= 1;
+		app->render->camera.x -= 5;
 
 	if(app->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-		app->render->camera.x += 1;
+		app->render->camera.x += 5;
+
+	// UPDATING CAM
+
 
 	// Draw map
 	app->map->Draw();
@@ -74,7 +136,7 @@ bool Scene::Update(float dt)
 		app->map->mapData.tileWidth, app->map->mapData.tileHeight,
 		app->map->mapData.tilesets.Count());
 
-	app->win->SetTitle(title.GetString());
+ 	app->win->SetTitle(title.GetString());
 
 	return true;
 }
@@ -100,4 +162,49 @@ bool Scene::CleanUp()
 
 void Scene::OnCollision(Collider* c1, Collider* c2)
 {
+	if (c1 == left_cam && left_cam->rect.x > 0)
+	{
+		app->render->camera.x += 8;
+		left_cam->SetPos(left_cam->rect.x - 2, left_cam->rect.y);
+		right_cam->SetPos(right_cam->rect.x - 2, right_cam->rect.y);
+		up_cam->SetPos(up_cam->rect.x - 2, up_cam->rect.y);
+		down_cam->SetPos(down_cam->rect.x - 2, down_cam->rect.y);
+	}
+	else if (c1 == right_cam && right_cam->rect.x < 800 )
+	{
+		app->render->camera.x -= 8;
+		right_cam->SetPos(right_cam->rect.x + 2, right_cam->rect.y);
+		left_cam->SetPos(left_cam->rect.x + 2, left_cam->rect.y);
+		up_cam->SetPos(up_cam->rect.x + 2, up_cam->rect.y);
+		down_cam->SetPos(down_cam->rect.x + 2, down_cam->rect.y);
+	}
+	
+	if (c1 == up_cam && up_cam->rect.y > -40)
+	{
+		app->render->camera.y += 8;
+		right_cam->SetPos(right_cam->rect.x, right_cam->rect.y - 2);
+		left_cam->SetPos(left_cam->rect.x, left_cam->rect.y - 2);
+		up_cam->SetPos(up_cam->rect.x, up_cam->rect.y - 2);
+		down_cam->SetPos(down_cam->rect.x, down_cam->rect.y - 2);
+	}
+	else if (c1 == down_cam && down_cam->rect.y < 272)
+	{
+		app->render->camera.y -= 8;
+		right_cam->SetPos(right_cam->rect.x, right_cam->rect.y + 2);
+		left_cam->SetPos(left_cam->rect.x, left_cam->rect.y + 2);
+		up_cam->SetPos(up_cam->rect.x, up_cam->rect.y + 2);
+		down_cam->SetPos(down_cam->rect.x, down_cam->rect.y + 2);
+	}
+
+	if (c1->type == Collider::Type::LOSE)
+	{
+		stop_game = true;
+		win_con = false;
+	}
+
+	if (c1->type == Collider::Type::WIN)
+	{
+		stop_game = true;
+		win_con = true;
+	}
 }

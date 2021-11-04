@@ -46,8 +46,8 @@ bool Window::Awake(pugi::xml_node& config)
 
 		scale = 4;
 
-		width = 400 * scale;
-		height = 200 * scale;
+		width = 300 * scale;
+		height = 175 * scale;
 		
 
 		if(fullscreen == true) flags |= SDL_WINDOW_FULLSCREEN;

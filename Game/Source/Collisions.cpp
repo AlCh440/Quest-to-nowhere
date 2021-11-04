@@ -15,74 +15,62 @@ Collisions::Collisions() : Module()
 
 	matrix[Collider::Type::WALL][Collider::Type::WALL] = false;
 	matrix[Collider::Type::WALL][Collider::Type::PLAYER] = true;
-	matrix[Collider::Type::WALL][Collider::Type::BOX] = true;
-	matrix[Collider::Type::WALL][Collider::Type::NEAR] = true;
-	matrix[Collider::Type::WALL][Collider::Type::BOXMIDDLE] = true;
-	matrix[Collider::Type::WALL][Collider::Type::FAR] = false;
-	matrix[Collider::Type::WALL][Collider::Type::DOT] = false;
+	matrix[Collider::Type::WALL][Collider::Type::PLAT] = false;
+	matrix[Collider::Type::WALL][Collider::Type::NEAR] = true; 
+	matrix[Collider::Type::WALL][Collider::Type::CAM] = false;
+	matrix[Collider::Type::WALL][Collider::Type::WIN] = false;
+	matrix[Collider::Type::WALL][Collider::Type::LOSE] = false;
 
-
+	
 	matrix[Collider::Type::PLAYER][Collider::Type::WALL] = true;
 	matrix[Collider::Type::PLAYER][Collider::Type::PLAYER] = false;
-	matrix[Collider::Type::PLAYER][Collider::Type::BOX] = true;
+	matrix[Collider::Type::PLAYER][Collider::Type::PLAT] = true;
 	matrix[Collider::Type::PLAYER][Collider::Type::NEAR] = false;
-	matrix[Collider::Type::PLAYER][Collider::Type::BOXMIDDLE] = true;
-	matrix[Collider::Type::PLAYER][Collider::Type::FAR] = false;
-	matrix[Collider::Type::PLAYER][Collider::Type::DOT] = false;
+	matrix[Collider::Type::PLAYER][Collider::Type::CAM] = true;
+	matrix[Collider::Type::PLAYER][Collider::Type::WIN] = true;
+	matrix[Collider::Type::PLAYER][Collider::Type::LOSE] = true;
 
 
-
-	matrix[Collider::Type::BOX][Collider::Type::WALL] = true;
-	matrix[Collider::Type::BOX][Collider::Type::PLAYER] = true;
-	matrix[Collider::Type::BOX][Collider::Type::BOX] = true;
-	matrix[Collider::Type::BOX][Collider::Type::NEAR] = true;
-	matrix[Collider::Type::BOX][Collider::Type::BOXMIDDLE] = true;
-	matrix[Collider::Type::BOX][Collider::Type::FAR] = false;
-	matrix[Collider::Type::BOX][Collider::Type::DOT] = false;
-
+	matrix[Collider::Type::PLAT][Collider::Type::WALL] = false;
+	matrix[Collider::Type::PLAT][Collider::Type::PLAYER] = true;
+	matrix[Collider::Type::PLAT][Collider::Type::PLAT] = false;
+	matrix[Collider::Type::PLAT][Collider::Type::NEAR] = true;
+	matrix[Collider::Type::PLAT][Collider::Type::CAM] = false;
+	matrix[Collider::Type::PLAT][Collider::Type::WIN] = false;
+	matrix[Collider::Type::PLAT][Collider::Type::LOSE] = false;
 
 
 	matrix[Collider::Type::NEAR][Collider::Type::WALL] = true;
 	matrix[Collider::Type::NEAR][Collider::Type::PLAYER] = false;
-	matrix[Collider::Type::NEAR][Collider::Type::BOX] = true;
+	matrix[Collider::Type::NEAR][Collider::Type::PLAT] = true;
 	matrix[Collider::Type::NEAR][Collider::Type::NEAR] = false;
-	matrix[Collider::Type::NEAR][Collider::Type::BOXMIDDLE] = true;
-	matrix[Collider::Type::NEAR][Collider::Type::FAR] = false;
-	matrix[Collider::Type::NEAR][Collider::Type::DOT] = false;
+	matrix[Collider::Type::NEAR][Collider::Type::CAM] = false;
+	matrix[Collider::Type::NEAR][Collider::Type::WIN] = false;
+	matrix[Collider::Type::NEAR][Collider::Type::LOSE] = false;
 
+	matrix[Collider::Type::CAM][Collider::Type::WALL] = false;
+	matrix[Collider::Type::CAM][Collider::Type::PLAYER] = true;
+	matrix[Collider::Type::CAM][Collider::Type::PLAT] = false;
+	matrix[Collider::Type::CAM][Collider::Type::NEAR] = false;
+	matrix[Collider::Type::CAM][Collider::Type::CAM] = false;
+	matrix[Collider::Type::CAM][Collider::Type::WIN] = false;
+	matrix[Collider::Type::CAM][Collider::Type::LOSE] = false;
 
+	matrix[Collider::Type::WIN][Collider::Type::WALL] = false;
+	matrix[Collider::Type::WIN][Collider::Type::PLAYER] = true;
+	matrix[Collider::Type::WIN][Collider::Type::PLAT] = false;
+	matrix[Collider::Type::WIN][Collider::Type::NEAR] = false;
+	matrix[Collider::Type::WIN][Collider::Type::CAM] = false;
+	matrix[Collider::Type::WIN][Collider::Type::WIN] = false;
+	matrix[Collider::Type::WIN][Collider::Type::LOSE] = false;
 
-
-	matrix[Collider::Type::BOXMIDDLE][Collider::Type::WALL] = true;
-	matrix[Collider::Type::BOXMIDDLE][Collider::Type::PLAYER] = true;
-	matrix[Collider::Type::BOXMIDDLE][Collider::Type::BOX] = true;
-	matrix[Collider::Type::BOXMIDDLE][Collider::Type::NEAR] = true;
-	matrix[Collider::Type::BOXMIDDLE][Collider::Type::BOXMIDDLE] = true;
-	matrix[Collider::Type::BOXMIDDLE][Collider::Type::FAR] = true;
-	matrix[Collider::Type::BOXMIDDLE][Collider::Type::DOT] = true;
-
-
-
-	matrix[Collider::Type::FAR][Collider::Type::WALL] = false;
-	matrix[Collider::Type::FAR][Collider::Type::PLAYER] = false;
-	matrix[Collider::Type::FAR][Collider::Type::BOX] = false;
-	matrix[Collider::Type::FAR][Collider::Type::NEAR] = false;
-	matrix[Collider::Type::FAR][Collider::Type::BOXMIDDLE] = true;
-	matrix[Collider::Type::FAR][Collider::Type::FAR] = false;
-	matrix[Collider::Type::FAR][Collider::Type::DOT] = false;
-
-	matrix[Collider::Type::DOT][Collider::Type::WALL] = false;
-	matrix[Collider::Type::DOT][Collider::Type::PLAYER] = false;
-	matrix[Collider::Type::DOT][Collider::Type::BOX] = false;
-	matrix[Collider::Type::DOT][Collider::Type::NEAR] = false;
-	matrix[Collider::Type::DOT][Collider::Type::BOXMIDDLE] = true;
-	matrix[Collider::Type::DOT][Collider::Type::FAR] = false;
-	matrix[Collider::Type::DOT][Collider::Type::DOT] = false;
-
-
-
-
-
+	matrix[Collider::Type::LOSE][Collider::Type::WALL] = false;
+	matrix[Collider::Type::LOSE][Collider::Type::PLAYER] = true;
+	matrix[Collider::Type::LOSE][Collider::Type::PLAT] = false;
+	matrix[Collider::Type::LOSE][Collider::Type::NEAR] = false;
+	matrix[Collider::Type::LOSE][Collider::Type::CAM] = false;
+	matrix[Collider::Type::LOSE][Collider::Type::WIN] = false;
+	matrix[Collider::Type::LOSE][Collider::Type::LOSE] = false;
 }
 
 // Destructor
@@ -139,7 +127,7 @@ bool Collisions::PreUpdate()
 bool Collisions::Update(float dt)
 {
 
-	if (app->input->GetKey(SDL_SCANCODE_I) == KEY_DOWN)
+	if (app->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
 	{
 		debug = !debug;
 
@@ -174,20 +162,25 @@ void Collisions::DebugDraw()
 		case Collider::Type::PLAYER: // green
 			app->render->DrawRectangle(colliders[i]->rect, 0, 255, 0, alpha);
 			break;
-		case Collider::Type::BOX: // red
+		case Collider::Type::PLAT: // red
 			app->render->DrawRectangle(colliders[i]->rect, 255, 0, 0, alpha);
 			break;
-		case Collider::Type::NEAR: // yellow
-			app->render->DrawRectangle(colliders[i]->rect, 255, 255, 0, alpha);
+		case Collider::Type::NEAR: // LILA
+			app->render->DrawRectangle(colliders[i]->rect, 255, 0, 255, alpha);
 			break;
-		case Collider::Type::BOXMIDDLE: // white
+
+		case Collider::Type::CAM: // white
 			app->render->DrawRectangle(colliders[i]->rect, 255, 255, 255, alpha);
 			break;
-		case Collider::Type::FAR: // yellow
-			app->render->DrawRectangle(colliders[i]->rect, 0, 0, 0, alpha);
+		case Collider::Type::WIN: // white
+			app->render->DrawRectangle(colliders[i]->rect, 255, 255, 0, alpha);
+			break;
+		case Collider::Type::LOSE: // white
+			app->render->DrawRectangle(colliders[i]->rect, 0, 255, 255, alpha);
 			break;
 		}
 	}
+	
 }
 
 // Called before quitting

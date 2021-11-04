@@ -34,8 +34,18 @@ public:
 
 	void OnCollision(Collider* c1, Collider* c2) override;
 
+	bool stop_game;
+	bool win_con;
+	bool stop_input;
 private:
+
 	SDL_Texture* img;
+	Collider* left_cam;
+	Collider* right_cam;
+	Collider* up_cam;
+	Collider* down_cam;
+
+	
 };
 
 #endif // __SCENE_H__

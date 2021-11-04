@@ -50,8 +50,11 @@ bool Map::Awake(pugi::xml_node& config)
 // Draw the map (all requried layers)
 void Map::Draw()
 {
-	if (mapLoaded == false) return;
-
+	if (mapLoaded == false)
+	{
+		LOG("NOTTTTT");
+		return;
+	}
 	// L04: DONE 5: Prepare the loop to draw all tilesets + DrawTexture()
 	ListItem<MapLayer*>* mapLayerItem;
 	mapLayerItem = mapData.maplayers.start;
@@ -107,6 +110,34 @@ iPoint Map::MapToWorld(int x, int y) const
 	{
 		ret.x = (x - y) * (mapData.tileWidth / 2);
 		ret.y = (x + y) * (mapData.tileHeight / 2);
+	}
+	else
+	{
+		LOG("Unknown map type");
+		ret.x = x; ret.y = y;
+	}
+
+	return ret;
+}
+
+// L05: DON 2: Add orthographic world to map coordinates
+iPoint Map::WorldToMap(int x, int y) const
+{
+	iPoint ret(0, 0);
+
+	// L05: DONE 3: Add the case for isometric maps to WorldToMap
+	if (mapData.type == MAPTYPE_ORTHOGONAL)
+	{
+		ret.x = x / mapData.tileWidth;
+		ret.y = y / mapData.tileHeight;
+	}
+	else if (mapData.type == MAPTYPE_ISOMETRIC)
+	{
+
+		float half_width = mapData.tileWidth * 0.5f;
+		float half_height = mapData.tileHeight * 0.5f;
+		ret.x = int((x / half_width + y / half_height) / 2);
+		ret.y = int((y / half_height - (x / half_width)) / 2);
 	}
 	else
 	{
@@ -196,7 +227,7 @@ bool Map::Load(const char* filename)
 	if (result == NULL)
 	{
 		LOG("Could not load map xml file %s. pugi error: %s", filename, result.description());
-		ret = false;
+		//ret = false;
 	}
 
 	if (ret == true)
@@ -231,7 +262,7 @@ bool Map::Load(const char* filename)
 	return ret;
 }
 
-// L03: DONE 3: Implement LoadMap to load the map properties
+// L03: TODO: Load map general properties
 bool Map::LoadMap(pugi::xml_node mapFile)
 {
 	bool ret = true;
@@ -249,10 +280,22 @@ bool Map::LoadMap(pugi::xml_node mapFile)
 		mapData.width = map.attribute("width").as_int();
 		mapData.tileHeight = map.attribute("tileheight").as_int();
 		mapData.tileWidth = map.attribute("tilewidth").as_int();
+
+		// L05: DONE 1: Add formula to go from isometric map to world coordinates
+		mapData.type = MAPTYPE_UNKNOWN;
+		if (strcmp(map.attribute("orientation").as_string(), "isometric") == 0)
+		{
+			mapData.type = MAPTYPE_ISOMETRIC;
+		}
+		if (strcmp(map.attribute("orientation").as_string(), "orthogonal") == 0)
+		{
+			mapData.type = MAPTYPE_ORTHOGONAL;
+		}
 	}
 
 	return ret;
 }
+
 
 // L03: DONE 4: Implement the LoadTileSet function to load the tileset properties
 bool Map::LoadTileSets(pugi::xml_node mapFile) {
@@ -305,11 +348,6 @@ bool Map::LoadTilesetImage(pugi::xml_node& tileset_node, TileSet* set)
 	{
 		// L03: DONE 4: Load Tileset image
 		SString tmp("%s%s", folder.GetString(), image.attribute("source").as_string());
-
-		//SDL_Surface* surface = IMG_Load(tmp.GetString()); //Need include #include "SDL_image/include/SDL_image.h"
-		//set->texture = SDL_CreateTextureFromSurface(app->render->renderer, surface);
-
-		//NOTE: This line simplifies the loading
 		set->texture = app->tex->Load(tmp.GetString());
 	}
 

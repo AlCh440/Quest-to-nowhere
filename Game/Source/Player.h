@@ -21,10 +21,14 @@ public:
 	bool Update(float dt);
 	bool PostUpdate();
 
+	void gravity();
+
 	void OnCollision(Collider* c1, Collider* c2) override;
 
+	
 	bool CleanUp();
 
+	SDL_Rect player;
 private:
 
 	SDL_Texture *idle_player;
@@ -36,6 +40,17 @@ private:
 	int direction;
 	bool is_moving;
 
-	SDL_Rect player;
+	
 	vec2 momentum;
+
+	Collider* hit_player;
+	Collider* near_up;
+	Collider* near_down;
+	Collider* near_right;
+	Collider* near_left;
+
+	bool can_move_right;
+	bool can_move_left;
+	bool can_move_down;
+	bool can_jump;
 };
