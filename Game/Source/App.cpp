@@ -17,7 +17,6 @@
 #include <iostream>
 #include <sstream>
 
-#define FPS 60
 
 // Constructor
 App::App(int argc, char* args[]) : argc(argc), args(args)
@@ -172,12 +171,13 @@ void App::PrepareUpdate()
 // ---------------------------------------------
 void App::FinishUpdate()
 {
-	// L02: DONE 1: This is a good place to call Load / Save methods
 	if (loadGameRequested == true) LoadGame();
 	if (saveGameRequested == true) SaveGame();
 
+
+	// Keeping the game at FPS 
 	if ((1000 / FPS) > SDL_GetTicks() - start) SDL_Delay(1000 / FPS - (SDL_GetTicks() - start));
-	// This is a good place to call Load / Save functions
+
 
 }
 

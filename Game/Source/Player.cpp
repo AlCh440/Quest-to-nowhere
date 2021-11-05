@@ -103,7 +103,6 @@ bool Player::Update(float dt)
 	gravity();
 
 	player.x += momentum.x;
-
 	player.y += momentum.y;
 
 	if (momentum.x < -2) momentum.x = -2;
