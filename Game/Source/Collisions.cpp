@@ -169,13 +169,13 @@ void Collisions::DebugDraw()
 			app->render->DrawRectangle(colliders[i]->rect, 255, 0, 255, alpha);
 			break;
 
-		case Collider::Type::CAM: // white
+		case Collider::Type::CAM: // yellow
 			app->render->DrawRectangle(colliders[i]->rect, 255, 255, 255, alpha);
 			break;
 		case Collider::Type::WIN: // white
 			app->render->DrawRectangle(colliders[i]->rect, 255, 255, 0, alpha);
 			break;
-		case Collider::Type::LOSE: // white
+		case Collider::Type::LOSE: // turquoise
 			app->render->DrawRectangle(colliders[i]->rect, 0, 255, 255, alpha);
 			break;
 		}

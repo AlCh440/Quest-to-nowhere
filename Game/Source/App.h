@@ -95,6 +95,7 @@ public:
 	Map* map;
 
 	Uint32 start;
+	bool start_preupdate;
 
 private:
 
@@ -102,6 +103,7 @@ private:
 	char** args;
 	SString title;
 	SString organization;
+
 
 	List<Module *> modules;
 

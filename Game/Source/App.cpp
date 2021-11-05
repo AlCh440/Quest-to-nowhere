@@ -114,6 +114,8 @@ bool App::Awake()
 // Called before the first frame
 bool App::Start()
 {
+	start_preupdate = true;
+
 	bool ret = true;
 	ListItem<Module*>* item;
 	item = modules.start;

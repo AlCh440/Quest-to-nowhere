@@ -74,7 +74,7 @@ bool Scene::Start()
 	app->coll->AddCollider({ 0, 272, 528, 48 }, Collider::Type::WALL, app->scene);
 
 	// WIN / LOSERS
-	app->coll->AddCollider({528, 272, 32, 32}, Collider::Type::LOSE, app->scene);
+	app->coll->AddCollider({ 528, 272, 32, 32 }, Collider::Type::LOSE, app->scene);
 	app->coll->AddCollider({ 656, 272, 48, 32 }, Collider::Type::LOSE, app->scene);
 
 	app->coll->AddCollider({ 816, 0, 32, 32 }, Collider::Type::WIN, app->scene);
@@ -86,21 +86,57 @@ bool Scene::Start()
 // Called each loop iteration
 bool Scene::PreUpdate()
 {
+
+	if (win_con && stop_game)
+	{
+		
+				// draw win screen
+		app->render->DrawRectangle({ 0, 0, 300, 300 }, 255, 255, 255, 240);
+		
+	}
+	else if (!win_con && stop_game)
+	{
+		
+				// draw lose screen
+		app->render->DrawRectangle({ 0, 0, 300, 300 }, 0, 0, 0, 240);
+
+		
+	}
+
+	if (stop_game)
+	{
+		if (app->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN)
+		{
+			//reset player and camera
+			app->player->player.x = 100;
+			app->player->player.y = 150;
+
+			app->render->camera.x = -100 * 4;
+			app->render->camera.y = -150 * 4;
+
+			//camera COLLIDERS!!!!!!!!!!!
+			down_cam->SetPos(100, 285);
+			left_cam->SetPos(100, 150);
+			right_cam->SetPos(320, 105);
+			up_cam->SetPos(100, 150);
+			
+
+			// stop_game
+			stop_game = false;
+			// win_con
+			win_con = false;
+			// start_preupdate
+			app->start_preupdate = true;
+		}
+	}
+
 	return true;
 }
 
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-	if (win_con)
-	{
-
-	}
-	else if (!win_con && stop_game)
-	{
-		   
-	}
-
+	
 	if (stop_game) stop_input = true;
 	else stop_input = false;
 
@@ -200,11 +236,14 @@ void Scene::OnCollision(Collider* c1, Collider* c2)
 	{
 		stop_game = true;
 		win_con = false;
+		app->start_preupdate = false;
 	}
 
 	if (c1->type == Collider::Type::WIN)
 	{
 		stop_game = true;
 		win_con = true;
+		app->start_preupdate = false;
+
 	}
 }

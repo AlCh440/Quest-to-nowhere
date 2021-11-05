@@ -76,23 +76,25 @@ bool Player::CleanUp()
 // Called each loop iteration
 bool Player::PreUpdate()
 {
+	if (app->start_preupdate)
+	{
+		if ((app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) && can_move_right)
+		{
+			momentum.x += 2;
+			is_moving = true;
+		}
 
-	if ((app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) && can_move_right)
-	{
-		momentum.x += 2;
-		is_moving = true;
-	}
+		if ((app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) && can_move_left)
+		{
+			momentum.x -= 2;
+			is_moving = true;
+		}
 
-	if ((app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT ) && can_move_left)
-	{
-		momentum.x -= 2;
-		is_moving = true;
-	}
-	
-	if ((app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && can_jump)
-	{
-		momentum.y = -10;
-		can_jump = false;
+		if ((app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) && can_jump)
+		{
+			momentum.y = -10;
+			can_jump = false;
+		}
 	}
 	return true;
 }
