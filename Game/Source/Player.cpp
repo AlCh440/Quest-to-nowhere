@@ -62,7 +62,7 @@ bool Player::Awake(pugi::xml_node& config)
 	max_momentum.x = config.child("max_mom").attribute("x").as_int();
 	max_momentum.y = config.child("max_mom").attribute("y").as_int();
 	gravity_ = config.child("player_grav").attribute("gravity").as_int();
-
+ 
 	return ret;
 }
 // Load assets
@@ -123,7 +123,8 @@ bool Player::Update(float dt)
 
 	if (momentum.x < -max_momentum.x) momentum.x = -max_momentum.x;
 	else if (momentum.x > max_momentum.x) momentum.x = max_momentum.x;
-	
+
+	if (player.x < 0) player.x = 0;
 	if (momentum.y > max_momentum.y) momentum.y = max_momentum.y;
 
 	
