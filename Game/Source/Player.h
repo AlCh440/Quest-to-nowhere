@@ -49,6 +49,10 @@ private:
 
 	
 	vec2 momentum;
+	vec2 max_momentum;
+
+	int gravity_;
+
 
 	Collider* hit_player;
 	Collider* near_up;
@@ -60,4 +64,6 @@ private:
 	bool can_move_left;
 	bool can_move_down;
 	bool can_jump;
+
+	
 };

@@ -59,7 +59,9 @@ bool Player::Awake(pugi::xml_node& config)
 
 	player.x = config.child("player_").attribute("x").as_int();
 	player.y = config.child("player_").attribute("y").as_int();
-
+	max_momentum.x = config.child("max_mom").attribute("x").as_int();
+	max_momentum.y = config.child("max_mom").attribute("y").as_int();
+	gravity_ = config.child("player_grav").attribute("gravity").as_int();
 
 	return ret;
 }
@@ -119,10 +121,10 @@ bool Player::Update(float dt)
 	player.x += momentum.x;
 	player.y += momentum.y;
 
-	if (momentum.x < -2) momentum.x = -2;
-	else if (momentum.x > 2 ) momentum.x = 2;
+	if (momentum.x < -max_momentum.x) momentum.x = -max_momentum.x;
+	else if (momentum.x > max_momentum.x) momentum.x = max_momentum.x;
 	
-	if (momentum.y > 4) momentum.y = 4;
+	if (momentum.y > max_momentum.y) momentum.y = max_momentum.y;
 
 	
 	if (momentum.x < 0)
@@ -185,7 +187,7 @@ void Player::gravity()
 {
 	if (can_move_down)
 	{
-		momentum.y += 1;
+		momentum.y += gravity_;
 	}
 }
 

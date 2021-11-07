@@ -9,7 +9,9 @@
     <camera x="0" y="-480" />	
   </renderer>
   <player>
-    <player_ x="80" y="150"/>
+    <player_ x="80" y="150" />
+    <max_mom x="2"  y="4" />
+    <player_grav gravity="1"/>
   </player>
   <window>
     <resolution width="300" height="175" scale="4"/>
