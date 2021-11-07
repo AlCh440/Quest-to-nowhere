@@ -10,6 +10,9 @@
 
 Collisions::Collisions() : Module()
 {
+
+	name.Create("collisions");
+
 	for (uint i = 0; i < MAX_COLLIDERS; ++i)
 		colliders[i] = nullptr;
 
@@ -127,7 +130,7 @@ bool Collisions::PreUpdate()
 bool Collisions::Update(float dt)
 {
 
-	if (app->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
+	if (app->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN || app->input->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
 	{
 		debug = !debug;
 

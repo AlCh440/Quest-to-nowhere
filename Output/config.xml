@@ -1,24 +1,24 @@
 <!-- Config file for the game -->
-<!-- L01: DONE 1: Create configuration file-->
 <config>
   <app>
     <title>Game Development Testbed</title>
     <organization>UPC</organization>
   </app>
-
   <renderer>
     <vsync value="false"/>
+    <camera x="0" y="-480" />	
   </renderer>
-
+  <player>
+    <player_ x="80" y="150"/>
+  </player>
   <window>
-    <resolution width="1600" height="480" scale="1"/>
+    <resolution width="300" height="175" scale="4"/>
     <fullscreen value="false"/>
     <borderless value="false"/>
     <resizable value="false"/>
     <fullscreen_window value="false"/>
   </window>
 
-  <!-- L03: Added maps folder as config option -->
   <map>
     <folder>Assets/maps/</folder>
   </map>

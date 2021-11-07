@@ -1,21 +1,23 @@
 #include "App.h"
 #include "Player.h"
 #include "Module.h"
-
+#include "Scene.h"
 #include "Render.h"
 #include "Textures.h"
 #include "Input.h"
+#include "Scene.h"
 #include "Collisions.h"
 
 Player::Player() : Module()
 {
+	name.Create("player");
+
 	is_moving = false;
 
 	idle.PushBack({ 0, 0, 14, 19 });
 	idle.PushBack({ 0, 44, 14, 19 });
 	idle.PushBack({ 0 , 88, 14, 19 });
 	idle.PushBack({ 0, 132, 14, 19 });
-	
 	
 	idle.loop = true;
 	idle.speed = 0.1f;
@@ -51,6 +53,16 @@ Player::Player() : Module()
 Player::~Player()
 {}
 
+bool Player::Awake(pugi::xml_node& config)
+{
+	bool ret = true;
+
+	player.x = config.child("player_").attribute("x").as_int();
+	player.y = config.child("player_").attribute("y").as_int();
+
+
+	return ret;
+}
 // Load assets
 bool Player::Start()
 {
@@ -76,7 +88,7 @@ bool Player::CleanUp()
 // Called each loop iteration
 bool Player::PreUpdate()
 {
-	if (app->start_preupdate)
+	if (!(app->scene->stop_game))
 	{
 		if ((app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) && can_move_right)
 		{
@@ -222,4 +234,44 @@ void Player::OnCollision(Collider* c1, Collider* c2)
 	}
 }
 
+// Load / Save
+bool Player::LoadState(pugi::xml_node& data)
+{
 
+	player.x = data.child("player").attribute("x").as_int();
+	player.y = data.child("player").attribute("y").as_int();
+
+	return true;
+}
+
+bool Player::SaveState(pugi::xml_node& data) const
+{
+	pugi::xml_node player_ = data.append_child("player");
+
+	player_.append_attribute("x") = player.x;
+	player_.append_attribute("y") = player.y;
+
+	return true;
+}
+
+void Player::StartLvl()
+{
+	pugi::xml_document configFile;
+	pugi::xml_node config;
+
+	bool ret = false;
+
+	// L01: DONE 3: Load config from XML
+	config = app->LoadConfig(configFile);
+
+	player.x = config.child("player").child("player_").attribute("x").as_int();
+	player.y = config.child("player").child("player_").attribute("y").as_int();
+
+	app->render->camera.x = config.child("renderer").child("camera").attribute("x").as_int();
+	app->render->camera.y = config.child("renderer").child("camera").attribute("y").as_int();
+
+	app->scene->down_cam->SetPos(app->render->camera.x, + 135 -(app->render->camera.y) / 4);
+	app->scene->left_cam->SetPos(app->render->camera.x, -(app->render->camera.y) / 4);
+	app->scene->right_cam->SetPos(app->render->camera.x + 220, -20 -(app->render->camera.y) / 4);
+	app->scene->up_cam->SetPos(app->render->camera.x, - 40 -(app->render->camera.y)/4);
+}

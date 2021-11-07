@@ -13,10 +13,11 @@ class Player : public Module
 {
 public:
 	Player();
+
 	virtual ~Player();
 
 	bool Start();
-	
+	bool Awake(pugi::xml_node&);
 	bool PreUpdate();
 	bool Update(float dt);
 	bool PostUpdate();
@@ -24,11 +25,17 @@ public:
 	void gravity();
 
 	void OnCollision(Collider* c1, Collider* c2) override;
-
 	
+	// Load / Save
+	bool LoadState(pugi::xml_node&);
+	bool SaveState(pugi::xml_node&) const;
+
 	bool CleanUp();
 
+	void StartLvl();
+
 	SDL_Rect player;
+
 private:
 
 	SDL_Texture *idle_player;

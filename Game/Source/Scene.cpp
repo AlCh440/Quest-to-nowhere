@@ -51,7 +51,6 @@ bool Scene::Start()
 	down_cam = app->coll->AddCollider({ 0, 280, 320, 40 }, Collider::Type::CAM, this);
 
 
-
 	app->coll->AddCollider({ 288, 224, 80, 48 }, Collider::Type::WALL, app->scene);
 	app->coll->AddCollider({ 416, 224, 112, 48 }, Collider::Type::WALL, app->scene);
 
@@ -87,38 +86,15 @@ bool Scene::Start()
 bool Scene::PreUpdate()
 {
 
-	if (win_con && stop_game)
-	{
-		
-				// draw win screen
-		app->render->DrawRectangle({ 0, 0, 300, 300 }, 255, 255, 255, 240);
-		
-	}
-	else if (!win_con && stop_game)
-	{
-		
-				// draw lose screen
-		app->render->DrawRectangle({ 0, 0, 300, 300 }, 0, 0, 0, 240);
-
-		
-	}
+	
 
 	if (stop_game)
 	{
 		if (app->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN)
 		{
 			//reset player and camera
-			app->player->player.x = 100;
-			app->player->player.y = 150;
-
-			app->render->camera.x = -100 * 4;
-			app->render->camera.y = -150 * 4;
-
-			//camera COLLIDERS!!!!!!!!!!!
-			down_cam->SetPos(100, 285);
-			left_cam->SetPos(100, 150);
-			right_cam->SetPos(320, 105);
-			up_cam->SetPos(100, 150);
+			app->player->StartLvl();
+			
 			
 
 			// stop_game
@@ -126,7 +102,7 @@ bool Scene::PreUpdate()
 			// win_con
 			win_con = false;
 			// start_preupdate
-			app->start_preupdate = true;
+			app->start_preupdate = false;
 		}
 	}
 
@@ -140,12 +116,13 @@ bool Scene::Update(float dt)
 	if (stop_game) stop_input = true;
 	else stop_input = false;
 
+	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+		app->player->StartLvl();
 
-	// L02: DONE 3: Request Load / Save when pressing L/S
-	if (app->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN) 
+	if ((app->input->GetKey(SDL_SCANCODE_L) || app->input->GetKey(SDL_SCANCODE_F6)) == KEY_DOWN) 
 		app->LoadGameRequest();
 	
-	if (app->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN)
+	if ((app->input->GetKey(SDL_SCANCODE_K) || app->input->GetKey(SDL_SCANCODE_F5)) == KEY_DOWN)
 		app->SaveGameRequest();
 
 	if(app->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
@@ -173,6 +150,22 @@ bool Scene::Update(float dt)
 		app->map->mapData.tilesets.Count());
 
  	app->win->SetTitle(title.GetString());
+
+	if (win_con && stop_game)
+	{
+
+		// draw win screen
+		app->render->DrawRectangle({ 0, 0, 300, 300 }, 255, 255, 255, 240);
+
+	}
+	else if (!win_con && stop_game)
+	{
+
+		// draw lose screen
+		app->render->DrawRectangle({ 0, 0, 300, 300 }, 0, 0, 0, 240);
+
+
+	}
 
 	return true;
 }
@@ -238,12 +231,15 @@ void Scene::OnCollision(Collider* c1, Collider* c2)
 		win_con = false;
 		app->start_preupdate = false;
 	}
-
-	if (c1->type == Collider::Type::WIN)
+	else if (c1->type == Collider::Type::WIN)
 	{
 		stop_game = true;
 		win_con = true;
 		app->start_preupdate = false;
 
+	}
+	else 
+	{
+		stop_game = false;
 	}
 }

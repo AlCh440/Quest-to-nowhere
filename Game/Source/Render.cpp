@@ -1,6 +1,7 @@
 #include "App.h"
 #include "Window.h"
 #include "Render.h"
+#include "Scene.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -45,8 +46,8 @@ bool Render::Awake(pugi::xml_node& config)
 	{
 		camera.w = app->win->screenSurface->w;
 		camera.h = app->win->screenSurface->h;
-		camera.x = 0;
-		camera.y = 0;
+		camera.x = config.child("renderer").child("camera").attribute("x").as_int();
+		camera.y = config.child("renderer").child("camera").attribute("y").as_int();
 	}
 
 	return ret;
@@ -92,7 +93,13 @@ bool Render::CleanUp()
 // Load Game State
 bool Render::LoadState(pugi::xml_node& data)
 {
-	//...
+	camera.x = data.child("camera_").attribute("x").as_int();
+	camera.y = data.child("camera_").attribute("y").as_int();
+
+	app->scene->down_cam->SetPos(-(app->render->camera.x)/4, +135 - (app->render->camera.y) / 4);
+	app->scene->left_cam->SetPos(-(app->render->camera.x)/4, -(app->render->camera.y) / 4);
+	app->scene->right_cam->SetPos(-(app->render->camera.x)/4 + 220, -20 - (app->render->camera.y) / 4);
+	app->scene->up_cam->SetPos(-(app->render->camera.x)/4, -40 - (app->render->camera.y) / 4);
 
 	return true;
 }
@@ -101,7 +108,10 @@ bool Render::LoadState(pugi::xml_node& data)
 // Save Game State
 bool Render::SaveState(pugi::xml_node& data) const
 {
-	//...
+	pugi::xml_node camera_ = data.append_child("camera_");
+
+	camera_.append_attribute("x") = camera.x;
+	camera_.append_attribute("y") = camera.y;
 
 	return true;
 }
