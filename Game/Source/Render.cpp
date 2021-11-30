@@ -46,8 +46,8 @@ bool Render::Awake(pugi::xml_node& config)
 	{
 		camera.w = app->win->screenSurface->w;
 		camera.h = app->win->screenSurface->h;
-		camera.x = config.child("renderer").child("camera").attribute("x").as_int();
-		camera.y = config.child("renderer").child("camera").attribute("y").as_int();
+		camera.x = config.child("camera").attribute("x").as_int();
+		camera.y = config.child("camera").attribute("y").as_int();
 	}
 
 	return ret;
@@ -96,10 +96,6 @@ bool Render::LoadState(pugi::xml_node& data)
 	camera.x = data.child("camera_").attribute("x").as_int();
 	camera.y = data.child("camera_").attribute("y").as_int();
 
-	app->scene->down_cam->SetPos(-(app->render->camera.x)/4, +135 - (app->render->camera.y) / 4);
-	app->scene->left_cam->SetPos(-(app->render->camera.x)/4, -(app->render->camera.y) / 4);
-	app->scene->right_cam->SetPos(-(app->render->camera.x)/4 + 220, -20 - (app->render->camera.y) / 4);
-	app->scene->up_cam->SetPos(-(app->render->camera.x)/4, -40 - (app->render->camera.y) / 4);
 
 	return true;
 }

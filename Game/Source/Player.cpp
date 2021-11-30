@@ -11,33 +11,49 @@
 Player::Player() : Module()
 {
 	name.Create("player");
+	
+	playerframescounter = 0;
 
 	is_moving = false;
 
-	idle.PushBack({ 0, 0, 14, 19 });
-	idle.PushBack({ 0, 44, 14, 19 });
-	idle.PushBack({ 0 , 88, 14, 19 });
-	idle.PushBack({ 0, 132, 14, 19 });
+	right_idle.PushBack({ 113, 0, 22, 23 });
+	right_idle.PushBack({ 90, 0, 22, 23 });
+	right_idle.PushBack({ 67, 0, 22, 23 });
+	right_idle.PushBack({ 44, 0, 22, 23 });
+	right_idle.PushBack({ 23, 0, 22, 23 });
+	right_idle.PushBack({ 1, 0, 22, 23 });
 	
-	idle.loop = true;
-	idle.speed = 0.1f;
+	right_idle.loop = false;
+	right_idle.speed = 0.08f;
 
-	right_running.PushBack({ 17, 0, 19, 20 });
-	right_running.PushBack({ 17, 44, 19, 20 });
-	right_running.PushBack({ 17, 88, 19, 20 });
-	right_running.PushBack({ 17, 132, 19, 20 });
-	right_running.PushBack({ 17, 175, 19, 20 }); 
-	right_running.PushBack({ 17, 220, 19, 20 });
+	left_idle.PushBack({ 135, 0, 22, 23 });
+	left_idle.PushBack({ 158, 0, 22, 23 });
+	left_idle.PushBack({ 181, 0, 22, 23 });
+	left_idle.PushBack({ 204, 0, 22, 23 });
+	left_idle.PushBack({ 226, 0, 22, 23 });
+	left_idle.PushBack({ 225, 26, 22, 23 });
+
+	left_idle.loop = false;
+	left_idle.speed = 0.05f;
+
+	right_running.PushBack({ 0, 26, 22, 23 });
+	right_running.PushBack({ 23, 26, 22, 23 });
+	right_running.PushBack({ 46, 26, 22, 23 });
+	right_running.PushBack({ 69, 26, 22, 23 });
+	right_running.PushBack({ 91, 26, 22, 23 }); 
+	right_running.PushBack({ 114, 26, 22, 23 });
+	right_running.PushBack({ 136, 26, 22, 23 });
 
 	right_running.loop = true;
 	right_running.speed = 0.1f;
 
-	left_running.PushBack({ 40, 0, 19, 20 });
-	left_running.PushBack({ 40, 44, 19, 20 });
-	left_running.PushBack({ 40, 88, 19, 20 });
-	left_running.PushBack({ 40, 132, 19, 20 });
-	left_running.PushBack({ 40, 175, 19, 20 });
-	left_running.PushBack({ 40, 220, 19, 20 });
+	left_running.PushBack({ 0, 51, 22, 23 });
+	left_running.PushBack({ 22, 51, 22, 23 });
+	left_running.PushBack({ 47, 51, 22, 23 });
+	left_running.PushBack({ 69, 51, 22, 23 });
+	left_running.PushBack({ 90, 51, 22, 23 });
+	left_running.PushBack({ 112, 51, 22, 23 });
+	left_running.PushBack({ 136, 51, 22, 23 });
 
 	left_running.loop = true;
 	left_running.speed = 0.1f;
@@ -68,13 +84,14 @@ bool Player::Awake(pugi::xml_node& config)
 // Load assets
 bool Player::Start()
 {
-	idle_player = app->tex->Load("Assets/Textures/boxer/iddle_sheet.png");
+	idle_player = app->tex->Load("Assets/Textures/player/player_sheet.png");
 
 	hit_player = app->coll->AddCollider(player, Collider::Type::PLAYER, app->player);
 	near_right = app->coll->AddCollider({ player.x + player.w, player.y, 2, 19 }, Collider::Type::NEAR, app->player);
 	near_left = app->coll->AddCollider({ player.x - 1, player.y, 1, 19 }, Collider::Type::NEAR, app->player);
 	near_down = app->coll->AddCollider({ player.x, player.y + player.w, 19, 4 }, Collider::Type::NEAR, app->player);
 
+	current_animation = &right_running;
 
 	return true;
 }
@@ -138,22 +155,29 @@ bool Player::Update(float dt)
 		momentum.x--;
 		direction = 1;
 	}
-	else if (momentum.x == 0)
+	else if (momentum.x == 0 && momentum.y == 0)
 	{
 		direction = 0;
 	}
 
 	if (direction == 0)
 	{
-		current_animation = &idle;
+		if (playerframescounter > 180)
+		{
+			if (current_animation == &right_running) current_animation = &right_idle;
+			else if (current_animation == &left_running) current_animation = &left_idle;
+		}
+		else playerframescounter++;
 	}
 	else if (direction == 1)
 	{
 		current_animation = &right_running;
+		playerframescounter = 0;
 	}
 	else if (direction == 2)
 	{
 		current_animation = &left_running;
+		playerframescounter = 0;
 	}
 
 
@@ -273,8 +297,5 @@ void Player::StartLvl()
 	app->render->camera.x = config.child("renderer").child("camera").attribute("x").as_int();
 	app->render->camera.y = config.child("renderer").child("camera").attribute("y").as_int();
 
-	app->scene->down_cam->SetPos(app->render->camera.x, + 135 -(app->render->camera.y) / 4);
-	app->scene->left_cam->SetPos(app->render->camera.x, -(app->render->camera.y) / 4);
-	app->scene->right_cam->SetPos(app->render->camera.x + 220, -20 -(app->render->camera.y) / 4);
-	app->scene->up_cam->SetPos(app->render->camera.x, - 40 -(app->render->camera.y)/4);
+
 }

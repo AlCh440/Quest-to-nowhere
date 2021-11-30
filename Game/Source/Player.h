@@ -39,7 +39,8 @@ public:
 private:
 
 	SDL_Texture *idle_player;
-	Animation idle;
+	Animation right_idle;
+	Animation left_idle;
 	Animation right_running;
 	Animation left_running;
 
@@ -65,5 +66,5 @@ private:
 	bool can_move_down;
 	bool can_jump;
 
-	
+	int playerframescounter;
 };

@@ -38,10 +38,7 @@ public:
 	bool win_con;
 	bool stop_input;
 
-	Collider* left_cam;
-	Collider* right_cam;
-	Collider* up_cam;
-	Collider* down_cam;
+
 private:
 
 	SDL_Texture* img;

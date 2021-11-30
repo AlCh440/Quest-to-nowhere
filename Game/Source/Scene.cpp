@@ -42,15 +42,6 @@ bool Scene::Start()
 	//app->map->Load("iso_nav.tmx");
 	//app->audio->PlayMusic("Assets/Audio/Music/music_spy.ogg");
 
-	app->render->camera.x = 0;
-	app->render->camera.y = -580;
-
-	left_cam = app->coll->AddCollider({ 0, 145, 80, 175 }, Collider::Type::CAM, this);
-	right_cam = app->coll->AddCollider({ 220, 100, 80, 220 }, Collider::Type::CAM, this);
-	up_cam = app->coll->AddCollider({ 0, 100, 320, 85 }, Collider::Type::CAM, this);
-	down_cam = app->coll->AddCollider({ 0, 280, 320, 40 }, Collider::Type::CAM, this);
-
-
 	app->coll->AddCollider({ 288, 224, 80, 48 }, Collider::Type::WALL, app->scene);
 	app->coll->AddCollider({ 416, 224, 112, 48 }, Collider::Type::WALL, app->scene);
 
@@ -191,39 +182,6 @@ bool Scene::CleanUp()
 
 void Scene::OnCollision(Collider* c1, Collider* c2)
 {
-	if (c1 == left_cam && left_cam->rect.x > 0)
-	{
-		app->render->camera.x += 8;
-		left_cam->SetPos(left_cam->rect.x - 2, left_cam->rect.y);
-		right_cam->SetPos(right_cam->rect.x - 2, right_cam->rect.y);
-		up_cam->SetPos(up_cam->rect.x - 2, up_cam->rect.y);
-		down_cam->SetPos(down_cam->rect.x - 2, down_cam->rect.y);
-	}
-	else if (c1 == right_cam && right_cam->rect.x < 800 )
-	{
-		app->render->camera.x -= 8;
-		right_cam->SetPos(right_cam->rect.x + 2, right_cam->rect.y);
-		left_cam->SetPos(left_cam->rect.x + 2, left_cam->rect.y);
-		up_cam->SetPos(up_cam->rect.x + 2, up_cam->rect.y);
-		down_cam->SetPos(down_cam->rect.x + 2, down_cam->rect.y);
-	}
-	
-	if (c1 == up_cam && up_cam->rect.y > -40)
-	{
-		app->render->camera.y += 8;
-		right_cam->SetPos(right_cam->rect.x, right_cam->rect.y - 2);
-		left_cam->SetPos(left_cam->rect.x, left_cam->rect.y - 2);
-		up_cam->SetPos(up_cam->rect.x, up_cam->rect.y - 2);
-		down_cam->SetPos(down_cam->rect.x, down_cam->rect.y - 2);
-	}
-	else if (c1 == down_cam && down_cam->rect.y < 272)
-	{
-		app->render->camera.y -= 8;
-		right_cam->SetPos(right_cam->rect.x, right_cam->rect.y + 2);
-		left_cam->SetPos(left_cam->rect.x, left_cam->rect.y + 2);
-		up_cam->SetPos(up_cam->rect.x, up_cam->rect.y + 2);
-		down_cam->SetPos(down_cam->rect.x, down_cam->rect.y + 2);
-	}
 
 	if (c1->type == Collider::Type::LOSE)
 	{
