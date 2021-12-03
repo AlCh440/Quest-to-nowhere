@@ -2,6 +2,8 @@
 #include "Render.h"
 #include "Textures.h"
 #include "Map.h"
+#include "Collisions.h"
+#include "Scene.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -257,6 +259,35 @@ bool Map::Load(const char* filename)
 	// Clean up the pugui tree
 	if (mapFile) mapFile.reset();
 
+	ListItem<MapLayer*>* mapLayerItem;
+	mapLayerItem = mapData.maplayers.start;
+	
+	while (mapLayerItem != NULL) {
+		for (int x = 0; x < mapLayerItem->data->width; x++)
+		{
+			for (int y = 0; y < mapLayerItem->data->height; y++)
+			{
+				// L04: DONE 9: Complete the draw function
+				int gid = mapLayerItem->data->Get(x, y);
+
+				if (gid == 299) {
+
+					//L06: TODO 4: Obtain the tile set using GetTilesetFromTileId
+					//now we always use the firt tileset in the list
+					//TileSet* tileset = mapData.tilesets.start->data;
+					TileSet* tileset = GetTilesetFromTileId(gid);
+
+					SDL_Rect r = tileset->GetTileRect(gid);
+					iPoint pos = MapToWorld(x, y);
+
+					app->coll->AddCollider({ pos.x, pos.y, 16, 16 }, Collider::Type::WALL, app->scene);
+				}
+
+			}
+		}
+		mapLayerItem = mapLayerItem->next;
+	}
+
 	mapLoaded = ret;
 
 	return ret;
@@ -291,6 +322,8 @@ bool Map::LoadMap(pugi::xml_node mapFile)
 		{
 			mapData.type = MAPTYPE_ORTHOGONAL;
 		}
+
+		
 	}
 
 	return ret;
