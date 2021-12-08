@@ -22,6 +22,8 @@
 App::App(int argc, char* args[]) : argc(argc), args(args)
 {
 	frames = 0;
+	start_preupdate = true;
+	stop_update = false;
 
 	win = new Window();
 	input = new Input();
@@ -137,11 +139,26 @@ bool App::Update()
 	if(input->GetWindowEvent(WE_QUIT) == true)
 		ret = false;
 
-	if(ret == true)
-		ret = PreUpdate();
+	
 
-	if(ret == true)
-		ret = DoUpdate();
+	if (!stop_update)
+	{
+		if (ret == true)
+			if (start_preupdate)
+			{
+				ret = PreUpdate();
+			}
+			else if (!start_preupdate) coll->PreUpdate();
+
+		if (ret == true)
+			ret = DoUpdate();
+	}
+	else
+	{
+		app->render->camera.x = (-320 * app->win->GetScale());
+		app->render->camera.y = (-0 * app->win->GetScale());
+		stop_update = false;
+	}
 
 	if(ret == true)
 		ret = PostUpdate();

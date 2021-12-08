@@ -96,6 +96,7 @@ public:
 
 	Uint32 start;
 	bool start_preupdate;
+	bool stop_update;
 
 private:
 

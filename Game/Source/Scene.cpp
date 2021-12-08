@@ -42,34 +42,6 @@ bool Scene::Start()
 	//app->map->Load("iso_nav.tmx");
 	//app->audio->PlayMusic("Assets/Audio/Music/music_spy.ogg");
 
-	app->coll->AddCollider({ 288, 224, 80, 48 }, Collider::Type::WALL, app->scene);
-	app->coll->AddCollider({ 416, 224, 112, 48 }, Collider::Type::WALL, app->scene);
-
-	app->coll->AddCollider({ 560, 224, 96, 96 }, Collider::Type::WALL, app->scene);
-	app->coll->AddCollider({ 704, 224, 128, 96 }, Collider::Type::WALL, app->scene);
-	app->coll->AddCollider({ 832, 192, 32, 32 }, Collider::Type::WALL, app->scene);
-	app->coll->AddCollider({ 864, 64, 16, 128 }, Collider::Type::WALL, app->scene);
-	app->coll->AddCollider({ 784, 32, 96, 32 }, Collider::Type::WALL, app->scene);
-
-	app->coll->AddCollider({ 720, 176, 80, 2 }, Collider::Type::PLAT, app->scene);
-	app->coll->AddCollider({ 624, 160, 48, 2 }, Collider::Type::PLAT, app->scene);
-	app->coll->AddCollider({ 560, 144, 48, 2 }, Collider::Type::PLAT, app->scene);
-	app->coll->AddCollider({ 496, 112, 48, 2 }, Collider::Type::PLAT, app->scene);
-	app->coll->AddCollider({ 576, 80, 96, 2 }, Collider::Type::PLAT, app->scene);
-
-	app->coll->AddCollider({ 592, 48, 16, 2 }, Collider::Type::PLAT, app->scene);
-	app->coll->AddCollider({ 624, 32, 32, 2 }, Collider::Type::PLAT, app->scene);
-
-
-	app->coll->AddCollider({ 0, 272, 528, 48 }, Collider::Type::WALL, app->scene);
-
-	// WIN / LOSERS
-	app->coll->AddCollider({ 528, 272, 32, 32 }, Collider::Type::LOSE, app->scene);
-	app->coll->AddCollider({ 656, 272, 48, 32 }, Collider::Type::LOSE, app->scene);
-
-	app->coll->AddCollider({ 816, 0, 32, 32 }, Collider::Type::WIN, app->scene);
-
-
 	return true;
 }
 
@@ -117,16 +89,16 @@ bool Scene::Update(float dt)
 		app->SaveGameRequest();
 
 	if(app->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-		app->render->camera.y -= 5;
+		app->render->camera.y -= 8;
 
 	if (app->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-		app->render->camera.y += 5;
+		app->render->camera.y += 8;
 
 	if(app->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-		app->render->camera.x -= 5;
+		app->render->camera.x -= 8;
 
 	if(app->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-		app->render->camera.x += 5;
+		app->render->camera.x += 8;
 
 	// UPDATING CAM
 
@@ -195,6 +167,13 @@ void Scene::OnCollision(Collider* c1, Collider* c2)
 		win_con = true;
 		app->start_preupdate = false;
 
+	}
+	else if (c1->type == Collider::Type::CAM)
+	{
+		if (app->render->camera.x != (320 * app->win->GetScale()) && app->render->camera.y != (0))
+		{
+			app->stop_update = true;
+		}
 	}
 	else 
 	{

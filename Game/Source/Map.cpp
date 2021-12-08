@@ -20,13 +20,9 @@ Map::Map() : Module(), mapLoaded(false)
 Map::~Map()
 {}
 
-// L06: TODO 7: Ask for the value of a custom property
 int Properties::GetProperty(const char* value, int defaultValue) const
 {
-	//...
-
 	ListItem<Property*>* item = list.start;
-
 
 	while (item)
 	{
@@ -270,19 +266,61 @@ bool Map::Load(const char* filename)
 				// L04: DONE 9: Complete the draw function
 				int gid = mapLayerItem->data->Get(x, y);
 
-				if (gid == 299) {
+				if (mapLayerItem->data->properties.GetProperty("Col", 1)) {
 
 					//L06: TODO 4: Obtain the tile set using GetTilesetFromTileId
 					//now we always use the firt tileset in the list
 					//TileSet* tileset = mapData.tilesets.start->data;
-					TileSet* tileset = GetTilesetFromTileId(gid);
+					if (gid == 587) 
+					{
+						TileSet* tileset = GetTilesetFromTileId(gid);
 
-					SDL_Rect r = tileset->GetTileRect(gid);
-					iPoint pos = MapToWorld(x, y);
+						SDL_Rect r = tileset->GetTileRect(gid);
+						iPoint pos = MapToWorld(x, y);
 
-					app->coll->AddCollider({ pos.x, pos.y, 16, 16 }, Collider::Type::WALL, app->scene);
+						app->coll->AddCollider({ pos.x, pos.y, 16, 16 }, Collider::Type::WALL, app->scene);
+					}
+
+					if (gid == 586)
+					{
+						TileSet* tileset = GetTilesetFromTileId(gid);
+
+						SDL_Rect r = tileset->GetTileRect(gid);
+						iPoint pos = MapToWorld(x, y);
+
+						app->coll->AddCollider({ pos.x, pos.y, 16, 4 }, Collider::Type::PLAT, app->scene);
+					}
+
+					if (gid == 618) 
+					{
+						TileSet* tileset = GetTilesetFromTileId(gid);
+
+						SDL_Rect r = tileset->GetTileRect(gid);
+						iPoint pos = MapToWorld(x, y);
+
+						app->coll->AddCollider({ pos.x, pos.y, 16, 16}, Collider::Type::LOSE, app->scene);
+					}
+
+					if (gid == 619)
+					{
+						TileSet* tileset = GetTilesetFromTileId(gid);
+
+						SDL_Rect r = tileset->GetTileRect(gid);
+						iPoint pos = MapToWorld(x, y);
+
+						app->coll->AddCollider({ pos.x, pos.y, 16, 16 }, Collider::Type::WIN, app->scene);
+					}
+
+					if (gid == 620)
+					{
+						TileSet* tileset = GetTilesetFromTileId(gid);
+
+						SDL_Rect r = tileset->GetTileRect(gid);
+						iPoint pos = MapToWorld(x, y);
+
+						app->coll->AddCollider({ pos.x, pos.y, 1, 16 }, Collider::Type::CAM, app->scene);
+					}
 				}
-
 			}
 		}
 		mapLayerItem = mapLayerItem->next;

@@ -58,7 +58,7 @@ Player::Player() : Module()
 	left_running.loop = true;
 	left_running.speed = 0.1f;
 
-	player = { 32, 250, 19, 19 };
+	player = { 32, 250, 16, 23 };
 
 	can_move_left = true;
 	can_move_right = true;
@@ -87,9 +87,9 @@ bool Player::Start()
 	idle_player = app->tex->Load("Assets/Textures/player/player_sheet.png");
 
 	hit_player = app->coll->AddCollider(player, Collider::Type::PLAYER, app->player);
-	near_right = app->coll->AddCollider({ player.x + player.w, player.y, 2, 19 }, Collider::Type::NEAR, app->player);
-	near_left = app->coll->AddCollider({ player.x - 1, player.y, 1, 19 }, Collider::Type::NEAR, app->player);
-	near_down = app->coll->AddCollider({ player.x, player.y + player.w, 19, 4 }, Collider::Type::NEAR, app->player);
+	near_right = app->coll->AddCollider({ player.x + player.w, player.y, 1, player.h - 1 }, Collider::Type::NEAR, app->player);
+	near_left = app->coll->AddCollider({ player.x - 1, player.y, 1, player.h - 1 }, Collider::Type::NEAR, app->player);
+	near_down = app->coll->AddCollider({ player.x, player.y + player.w, player.w, 4 }, Collider::Type::NEAR, app->player);
 
 	current_animation = &right_running;
 
@@ -194,7 +194,7 @@ bool Player::Update(float dt)
 	near_right->SetPos(player.x + player.w, player.y);
 	near_left->SetPos(player.x - 1, player.y);
 	near_down->SetPos(player.x, player.y + player.h);
-
+	
 	return true;
 }
 
@@ -203,8 +203,9 @@ bool Player::PostUpdate()
 {
 
 	//Drawing player
-	app->render->DrawTexture(idle_player, player.x, player.y, &current_animation->GetCurrentFrame());
-
+	if (current_animation == &left_idle || current_animation == &left_running) app->render->DrawTexture(idle_player, player.x - 5, player.y, &current_animation->GetCurrentFrame());
+	else app->render->DrawTexture(idle_player, player.x, player.y, &current_animation->GetCurrentFrame());
+	
 	return true;
 }
 
@@ -224,7 +225,8 @@ void Player::OnCollision(Collider* c1, Collider* c2)
 		{
 			if (momentum.y > 0)
 			{
-				if (player.x > c2->rect.x) player.y = c2->rect.y - player.h;
+				player.y = c2->rect.y - player.h;
+				
 				momentum.y = 0;
 			}
 			can_jump = true;

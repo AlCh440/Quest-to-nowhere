@@ -9,7 +9,7 @@
     <camera x="0" y="-480" />	
   </renderer>
   <player>
-    <player_ x="80" y="150" />
+    <player_ x="48" y="368" />
     <max_mom x="1"  y="3" />
     <player_grav gravity="1"/>
   </player>
