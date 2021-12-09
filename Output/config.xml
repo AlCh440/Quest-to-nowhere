@@ -10,7 +10,7 @@
   </renderer>
   <player>
     <player_ x="48" y="368" />
-    <max_mom x="1"  y="3" />
+    <max_mom x="1.5"  y="3" />
     <player_grav gravity="1"/>
   </player>
   <window>

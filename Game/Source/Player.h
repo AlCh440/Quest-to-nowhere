@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __PLAYER_H__
+#define __PLAYER_H__
+
 #include "Module.h"
 #include "App.h"
 #include "Animation.h"
@@ -68,3 +70,5 @@ private:
 
 	int playerframescounter;
 };
+
+#endif

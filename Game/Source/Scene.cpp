@@ -8,6 +8,7 @@
 #include "Map.h"
 #include "Player.h"
 #include "Collisions.h"
+#include "Pathfinding.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -38,7 +39,19 @@ bool Scene::Awake()
 bool Scene::Start()
 {
 	// L03: DONE: Load map
-	app->map->Load("hello.tmx");
+	//app->map->Load("hello.tmx");
+
+	if (app->map->Load("hello.tmx") == true)
+	{
+		int w, h;
+		uchar* data = NULL;
+
+		if (app->map->CreateWalkabilityMap(w, h, &data))
+		{
+			app->pathfinding->SetMap(w, h, data);
+		}
+		RELEASE_ARRAY(data);
+	}
 	//app->map->Load("iso_nav.tmx");
 	//app->audio->PlayMusic("Assets/Audio/Music/music_spy.ogg");
 

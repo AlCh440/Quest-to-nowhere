@@ -9,6 +9,8 @@
 #include "Collisions.h"
 #include "Collider.h"
 #include "Map.h"
+#include "EnemyController.h"
+#include "Pathfinding.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -34,6 +36,8 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	player = new Player();
 	coll = new Collisions();
 	map = new Map();
+	enemy = new EnemyController();
+	pathfinding = new PathFinding();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -44,8 +48,9 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(scene);
 	AddModule(map);
 	AddModule(player);
+	AddModule(enemy);
+	AddModule(pathfinding);
 	AddModule(coll);
-
 
 	// Render last to swap buffer
 	AddModule(render);

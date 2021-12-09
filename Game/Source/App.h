@@ -19,6 +19,8 @@ class Scene;
 class Player;
 class Collisions;
 class Map;
+class EnemyController;
+class PathFinding;
 
 class App
 {
@@ -93,6 +95,8 @@ public:
 	Player* player;
 	Collisions* coll;
 	Map* map;
+	EnemyController* enemy;
+	PathFinding* pathfinding;
 
 	Uint32 start;
 	bool start_preupdate;

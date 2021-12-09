@@ -19,6 +19,9 @@
     <ClCompile Include="Source\Collider.cpp" />
     <ClCompile Include="Source\Collisions.cpp" />
     <ClCompile Include="Source\Map.cpp" />
+    <ClCompile Include="Source\Bat.cpp" />
+    <ClCompile Include="Source\EnemyController.cpp" />
+    <ClCompile Include="Source\Pathfinding.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Window.h" />
@@ -61,6 +64,10 @@
     <ClInclude Include="Source\Collisions.h" />
     <ClInclude Include="Source\Animation.h" />
     <ClInclude Include="Source\Map.h" />
+    <ClInclude Include="Source\Bat.h" />
+    <ClInclude Include="Source\Enemy.h" />
+    <ClInclude Include="Source\EnemyController.h" />
+    <ClInclude Include="Source\Pathfinding.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">
