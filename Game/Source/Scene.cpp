@@ -192,4 +192,9 @@ void Scene::OnCollision(Collider* c1, Collider* c2)
 	{
 		stop_game = false;
 	}
+
+	if (c1->type == Collider::Type::ENEMY)
+	{
+		c1->point->SolveColl();
+	}
 }

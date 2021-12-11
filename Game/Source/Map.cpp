@@ -322,7 +322,7 @@ bool Map::Load(const char* filename)
 						SDL_Rect r = tileset->GetTileRect(gid);
 						iPoint pos = MapToWorld(x, y);
 
-						app->coll->AddCollider({ pos.x, pos.y, 16, 16 }, Collider::Type::WALL, app->scene);
+						app->coll->AddCollider({ pos.x, pos.y, 16, 16 }, Collider::Type::WALL, 0, app->scene);
 					}
 
 					if (gid == 586)
@@ -332,7 +332,7 @@ bool Map::Load(const char* filename)
 						SDL_Rect r = tileset->GetTileRect(gid);
 						iPoint pos = MapToWorld(x, y);
 
-						app->coll->AddCollider({ pos.x, pos.y, 16, 4 }, Collider::Type::PLAT, app->scene);
+						app->coll->AddCollider({ pos.x, pos.y, 16, 4 }, Collider::Type::PLAT, 0, app->scene);
 					}
 
 					if (gid == 618) 
@@ -342,7 +342,7 @@ bool Map::Load(const char* filename)
 						SDL_Rect r = tileset->GetTileRect(gid);
 						iPoint pos = MapToWorld(x, y);
 
-						app->coll->AddCollider({ pos.x, pos.y, 16, 16}, Collider::Type::LOSE, app->scene);
+						app->coll->AddCollider({ pos.x, pos.y, 16, 16}, Collider::Type::LOSE, 0, app->scene);
 					}
 
 					if (gid == 619)
@@ -352,7 +352,7 @@ bool Map::Load(const char* filename)
 						SDL_Rect r = tileset->GetTileRect(gid);
 						iPoint pos = MapToWorld(x, y);
 
-						app->coll->AddCollider({ pos.x, pos.y, 16, 16 }, Collider::Type::WIN, app->scene);
+						app->coll->AddCollider({ pos.x, pos.y, 16, 16 }, Collider::Type::WIN, 0, app->scene);
 					}
 
 					if (gid == 620)
@@ -362,7 +362,7 @@ bool Map::Load(const char* filename)
 						SDL_Rect r = tileset->GetTileRect(gid);
 						iPoint pos = MapToWorld(x, y);
 
-						app->coll->AddCollider({ pos.x, pos.y, 1, 16 }, Collider::Type::CAM, app->scene);
+						app->coll->AddCollider({ pos.x, pos.y, 1, 16 }, Collider::Type::CAM, 0, app->scene);
 					}
 
 					if (gid == 791)
@@ -372,7 +372,18 @@ bool Map::Load(const char* filename)
 						SDL_Rect r = tileset->GetTileRect(gid);
 						iPoint pos = MapToWorld(x, y);
 
-						app->enemy->AddEnemy(pos.x, pos.y);
+						app->enemy->AddEnemy(pos.x, pos.y, 0);
+					}
+
+
+					if (gid == 1002)
+					{
+						TileSet* tileset = GetTilesetFromTileId(gid);
+
+						SDL_Rect r = tileset->GetTileRect(gid);
+						iPoint pos = MapToWorld(x, y);
+
+						app->enemy->AddEnemy(pos.x, pos.y, 1);
 					}
 				}
 			}

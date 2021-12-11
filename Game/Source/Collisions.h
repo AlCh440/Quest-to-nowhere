@@ -4,6 +4,7 @@
 #define MAX_COLLIDERS 300
 
 #include "Module.h"
+#include "Enemy.h"
 #include "Collider.h"
 
 class Collisions : public Module
@@ -35,7 +36,7 @@ public:
 	void OnCollision(Collider* c1, Collider* c2) override;
 
 	// Adds a new collider to the list
-	Collider* AddCollider(SDL_Rect rect, Collider::Type type, Module* listener = nullptr);
+	Collider* AddCollider(SDL_Rect rect, Collider::Type type, Enemy* point_ = nullptr, Module* listener = nullptr);
 
 	// Removes the collider memory and removes it from the colliders array
 	void RemoveCollider(Collider* collider);

@@ -28,7 +28,7 @@ public:
 	bool CleanUp();
 
 
-	Enemy* AddEnemy(int x, int y);
+	Enemy* AddEnemy(int x, int y, int enemy);
 
 	void DebugDraw();
 

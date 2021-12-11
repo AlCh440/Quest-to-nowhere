@@ -1,11 +1,11 @@
-#pragma once
 #ifndef __COLLIDER_H__
 #define __COLLIDER_H__
 
 #include "SDL/include/SDL_Rect.h"
 
-#define MAX_LISTENERS 7
+#define MAX_LISTENERS 8
 
+class Enemy;
 class Module;
 
 struct Collider
@@ -20,12 +20,14 @@ struct Collider
 		CAM,
 		WIN, 
 		LOSE,
+		ENEMY,
 
 		MAX
 	};
 
 	//Methods
 	Collider(SDL_Rect rectangle, Type type, Module* listener = nullptr);
+	Collider(SDL_Rect rectangle, Type type, Enemy* point_, Module* listener = nullptr);
 
 	void SetPos(int x, int y);
 
@@ -38,6 +40,7 @@ struct Collider
 	bool pendingToDelete = false;
 	Type type;
 	Module* listeners[MAX_LISTENERS] = { nullptr };
+	Enemy* point;
 };
 
 

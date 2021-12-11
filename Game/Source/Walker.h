@@ -7,16 +7,13 @@
 #include "Point.h"
 #include "SDL/include/SDL.h"
 
-struct vec2 {
-	int x, y;
-};
 
-class Bat : public Enemy
+class Walker : public Enemy
 {
 public:
-	Bat(int x, int y);
+	Walker(int x, int y);
 
-	virtual ~Bat();
+	virtual ~Walker();
 	bool Start();
 
 	bool PreUpdate();
@@ -34,15 +31,16 @@ public:
 	Collider* hit_bat;
 private:
 
-	SDL_Texture* bat_sprite;
+	SDL_Texture* walker_sprite;
 	Animation formation;
-	Animation fly;
+	Animation walking_rigth;
+	Animation walking_left;
 	Animation death;
 
 
 	Animation* current_animation;
 
-	int bat_state;
+	int walker_state;
 	int direction;
 	bool is_moving;
 
@@ -53,7 +51,8 @@ private:
 	int gravity_;
 
 
-	
+
 
 
 };
+#pragma once

@@ -42,11 +42,16 @@ public:
 
 	bool CleanUp();
 
-	void StartLvl();
+	virtual void SolveColl()
+	{
+
+	}
 
 	SDL_Rect player;
 
 	bool pendingToDelete;
+
+	//Collider* hit_bat;
 private:
 
 	

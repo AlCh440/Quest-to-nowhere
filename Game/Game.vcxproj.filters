@@ -22,6 +22,7 @@
     <ClCompile Include="Source\Bat.cpp" />
     <ClCompile Include="Source\EnemyController.cpp" />
     <ClCompile Include="Source\Pathfinding.cpp" />
+    <ClCompile Include="Source\Walker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Window.h" />
@@ -68,6 +69,7 @@
     <ClInclude Include="Source\Enemy.h" />
     <ClInclude Include="Source\EnemyController.h" />
     <ClInclude Include="Source\Pathfinding.h" />
+    <ClInclude Include="Source\Walker.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">

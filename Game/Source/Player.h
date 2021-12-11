@@ -5,11 +5,10 @@
 #include "App.h"
 #include "Animation.h"
 
+#include "Point.h"
 #include "SDL/include/SDL.h"
 
-struct vec2 {
-	int x, y;
-};
+
 
 class Player : public Module
 {
@@ -51,8 +50,8 @@ private:
 	bool is_moving;
 
 	
-	vec2 momentum;
-	vec2 max_momentum;
+	iPoint momentum;
+	iPoint max_momentum;
 
 	int gravity_;
 

@@ -1,5 +1,8 @@
 #include "EnemyController.h"
+#include "Collisions.h"
 #include "bat.h"
+#include "Walker.h"
+#include "Scene.h"
 
 EnemyController::EnemyController()
 {
@@ -79,7 +82,7 @@ bool EnemyController::CleanUp()
 	return true;
 }
 
-Enemy* EnemyController::AddEnemy(int x, int y)
+Enemy* EnemyController::AddEnemy(int x, int y, int enemy)
 {
 	Enemy* ret = nullptr;
 
@@ -87,7 +90,9 @@ Enemy* EnemyController::AddEnemy(int x, int y)
 	{
 		if (Enemies[i] == nullptr)
 		{
-			ret = Enemies[i] = new Bat(x, y);
+			if (enemy == 0) ret = Enemies[i] = new Bat(x, y);
+			else if (enemy == 1) ret = Enemies[i] = new Walker(x, y);
+
 			break;
 		}
 	}

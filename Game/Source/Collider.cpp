@@ -1,11 +1,18 @@
 #include "Collider.h"
 #include "Module.h"
+#include "Enemy.h"
 
 #include "SDL/include/SDL.h"
 
 Collider::Collider(SDL_Rect rectangle, Type type, Module* listener) : rect(rectangle), type(type)
 {
 	listeners[0] = listener;
+}
+
+Collider::Collider(SDL_Rect rectangle, Type type, Enemy* point_, Module* listener) : rect(rectangle), type(type)
+{
+	listeners[0] = listener;
+	point = point_;
 }
 
 void Collider::SetPos(int x, int y)

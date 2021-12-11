@@ -19,12 +19,13 @@ Collisions::Collisions() : Module()
 	matrix[Collider::Type::WALL][Collider::Type::WALL] = false;
 	matrix[Collider::Type::WALL][Collider::Type::PLAYER] = true;
 	matrix[Collider::Type::WALL][Collider::Type::PLAT] = false;
-	matrix[Collider::Type::WALL][Collider::Type::NEAR] = true; 
+	matrix[Collider::Type::WALL][Collider::Type::NEAR] = true;
 	matrix[Collider::Type::WALL][Collider::Type::CAM] = false;
 	matrix[Collider::Type::WALL][Collider::Type::WIN] = false;
 	matrix[Collider::Type::WALL][Collider::Type::LOSE] = false;
+	matrix[Collider::Type::WALL][Collider::Type::ENEMY] = true;
 
-	
+
 	matrix[Collider::Type::PLAYER][Collider::Type::WALL] = true;
 	matrix[Collider::Type::PLAYER][Collider::Type::PLAYER] = false;
 	matrix[Collider::Type::PLAYER][Collider::Type::PLAT] = true;
@@ -32,6 +33,7 @@ Collisions::Collisions() : Module()
 	matrix[Collider::Type::PLAYER][Collider::Type::CAM] = true;
 	matrix[Collider::Type::PLAYER][Collider::Type::WIN] = true;
 	matrix[Collider::Type::PLAYER][Collider::Type::LOSE] = true;
+	matrix[Collider::Type::PLAYER][Collider::Type::ENEMY] = false;
 
 
 	matrix[Collider::Type::PLAT][Collider::Type::WALL] = false;
@@ -41,7 +43,7 @@ Collisions::Collisions() : Module()
 	matrix[Collider::Type::PLAT][Collider::Type::CAM] = false;
 	matrix[Collider::Type::PLAT][Collider::Type::WIN] = false;
 	matrix[Collider::Type::PLAT][Collider::Type::LOSE] = false;
-
+	matrix[Collider::Type::PLAT][Collider::Type::ENEMY] = true;
 
 	matrix[Collider::Type::NEAR][Collider::Type::WALL] = true;
 	matrix[Collider::Type::NEAR][Collider::Type::PLAYER] = false;
@@ -50,6 +52,7 @@ Collisions::Collisions() : Module()
 	matrix[Collider::Type::NEAR][Collider::Type::CAM] = false;
 	matrix[Collider::Type::NEAR][Collider::Type::WIN] = false;
 	matrix[Collider::Type::NEAR][Collider::Type::LOSE] = false;
+	matrix[Collider::Type::NEAR][Collider::Type::ENEMY] = false;
 
 	matrix[Collider::Type::CAM][Collider::Type::WALL] = false;
 	matrix[Collider::Type::CAM][Collider::Type::PLAYER] = true;
@@ -58,6 +61,7 @@ Collisions::Collisions() : Module()
 	matrix[Collider::Type::CAM][Collider::Type::CAM] = false;
 	matrix[Collider::Type::CAM][Collider::Type::WIN] = false;
 	matrix[Collider::Type::CAM][Collider::Type::LOSE] = false;
+	matrix[Collider::Type::CAM][Collider::Type::ENEMY] = false;
 
 	matrix[Collider::Type::WIN][Collider::Type::WALL] = false;
 	matrix[Collider::Type::WIN][Collider::Type::PLAYER] = true;
@@ -66,6 +70,7 @@ Collisions::Collisions() : Module()
 	matrix[Collider::Type::WIN][Collider::Type::CAM] = false;
 	matrix[Collider::Type::WIN][Collider::Type::WIN] = false;
 	matrix[Collider::Type::WIN][Collider::Type::LOSE] = false;
+	matrix[Collider::Type::WIN][Collider::Type::ENEMY] = false;
 
 	matrix[Collider::Type::LOSE][Collider::Type::WALL] = false;
 	matrix[Collider::Type::LOSE][Collider::Type::PLAYER] = true;
@@ -74,6 +79,16 @@ Collisions::Collisions() : Module()
 	matrix[Collider::Type::LOSE][Collider::Type::CAM] = false;
 	matrix[Collider::Type::LOSE][Collider::Type::WIN] = false;
 	matrix[Collider::Type::LOSE][Collider::Type::LOSE] = false;
+	matrix[Collider::Type::LOSE][Collider::Type::ENEMY] = false;
+
+	matrix[Collider::Type::ENEMY][Collider::Type::WALL] = true;
+	matrix[Collider::Type::ENEMY][Collider::Type::PLAYER] = false;
+	matrix[Collider::Type::ENEMY][Collider::Type::PLAT] = true;
+	matrix[Collider::Type::ENEMY][Collider::Type::NEAR] = false;
+	matrix[Collider::Type::ENEMY][Collider::Type::CAM] = false;
+	matrix[Collider::Type::ENEMY][Collider::Type::WIN] = false;
+	matrix[Collider::Type::ENEMY][Collider::Type::LOSE] = false;
+	matrix[Collider::Type::ENEMY][Collider::Type::ENEMY] = true;;
 }
 
 // Destructor
@@ -168,10 +183,9 @@ void Collisions::DebugDraw()
 		case Collider::Type::PLAT: // red
 			app->render->DrawRectangle(colliders[i]->rect, 255, 0, 0, alpha);
 			break;
-		case Collider::Type::NEAR: // LILA
+		case Collider::Type::NEAR: // purple
 			app->render->DrawRectangle(colliders[i]->rect, 255, 0, 255, alpha);
 			break;
-
 		case Collider::Type::CAM: // yellow
 			app->render->DrawRectangle(colliders[i]->rect, 255, 255, 255, alpha);
 			break;
@@ -181,7 +195,11 @@ void Collisions::DebugDraw()
 		case Collider::Type::LOSE: // turquoise
 			app->render->DrawRectangle(colliders[i]->rect, 0, 255, 255, alpha);
 			break;
+		case Collider::Type::ENEMY: // light purple
+			app->render->DrawRectangle(colliders[i]->rect, 200, 150, 255, alpha);
+			break;
 		}
+		
 	}
 	
 }
@@ -207,16 +225,35 @@ void Collisions::OnCollision(Collider* c1, Collider* c2)
 {
 }
 
-Collider* Collisions::AddCollider(SDL_Rect rect, Collider::Type type, Module* listener)
+Collider* Collisions::AddCollider(SDL_Rect rect, Collider::Type type, Enemy* point_, Module* listener)
 {
 	Collider* ret = nullptr;
 
-	for (uint i = 0; i < MAX_COLLIDERS; ++i)
-	{
-		if (colliders[i] == nullptr)
+	if (point_ == nullptr) {
+
+
+	
+
+		for (uint i = 0; i < MAX_COLLIDERS; ++i)
 		{
-			ret = colliders[i] = new Collider(rect, type, listener);
-			break;
+			if (colliders[i] == nullptr)
+			{
+				ret = colliders[i] = new Collider(rect, type, listener);
+				break;
+			}
+		}
+	}
+	else 
+	{
+
+
+		for (uint i = 0; i < MAX_COLLIDERS; ++i)
+		{
+			if (colliders[i] == nullptr)
+			{
+				ret = colliders[i] = new Collider(rect, type, point_, listener);
+				break;
+			}
 		}
 	}
 
