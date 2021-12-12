@@ -5,13 +5,13 @@
     <organization>UPC</organization>
   </app>
   <renderer>
-    <vsync value="true"/>
+    <vsync value="false"/>
     <camera x="0" y="-480" />	
   </renderer>
   <player>
-    <player_ x="48" y="368" />
-    <max_mom x="1.5"  y="3" />
-    <player_grav gravity="1"/>
+    <player_ x="48" y="300" />
+    <max_mom x="30"  y="100" />
+    <player_grav gravity="25"/>
   </player>
   <window>
     <resolution width="320" height="320" scale="3"/>

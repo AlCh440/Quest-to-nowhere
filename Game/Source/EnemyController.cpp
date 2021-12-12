@@ -3,7 +3,9 @@
 #include "bat.h"
 #include "Walker.h"
 #include "Scene.h"
+#include "Map.h"
 
+#include "Log.h"
 EnemyController::EnemyController()
 {
 	name.Create("Enemy");
@@ -68,8 +70,47 @@ bool EnemyController::PostUpdate()
 	return true;
 }
 
+bool EnemyController::LoadState(pugi::xml_node& data)
+{
+	CleanUp();
+
+	pugi::xml_node enem = data.find_child_by_attribute("enemy", "name", "0");
+	
+	while (enem != NULL)
+	{
+		app->enemy->AddEnemy(data.child("enemy").attribute("x").as_int(), data.child("enemy").attribute("y").as_int(), data.child("enemy").attribute("name").as_int(), true);
+		LOG("%i", enem.attribute("name").as_int());
+
+		enem = enem.next_sibling();
+	}
+	return true;
+}
+
+bool EnemyController::SaveState(pugi::xml_node& data) const
+{
+
+	for (uint i = 0; i < MAX_ENEMIES; ++i)
+	{
+		if (Enemies[i] != nullptr)
+		{
+			pugi::xml_node enemy_ = data.append_child("enemy");
+			int name_ = Enemies[i]->GetName();
+			iPoint pos = Enemies[i]->GetPosition();
+
+			enemy_.append_attribute("name") = name_;
+			enemy_.append_attribute("x") = pos.x;
+			enemy_.append_attribute("y") = pos.y;
+		}
+	}
+
+	return true;
+}
+
+
 bool EnemyController::CleanUp()
 {
+	app->coll->RemoveColliderType(Collider::Type::ENEMY);
+
 	for (uint i = 0; i < MAX_ENEMIES; ++i)
 	{
 		if (Enemies[i] != nullptr)
@@ -82,16 +123,24 @@ bool EnemyController::CleanUp()
 	return true;
 }
 
-Enemy* EnemyController::AddEnemy(int x, int y, int enemy)
+void EnemyController::StartLvl()
+{
+	CleanUp();
+
+	app->map->LoadenemiesLvl();
+}
+
+Enemy* EnemyController::AddEnemy(int x, int y, int enemy, bool solve)
 {
 	Enemy* ret = nullptr;
+
 
 	for (uint i = 0; i < MAX_ENEMIES; ++i)
 	{
 		if (Enemies[i] == nullptr)
 		{
-			if (enemy == 0) ret = Enemies[i] = new Bat(x, y);
-			else if (enemy == 1) ret = Enemies[i] = new Walker(x, y);
+			if (enemy == 0) ret = Enemies[i] = new Bat(x, y, i, solve);
+			else if (enemy == 1) ret = Enemies[i] = new Walker(x, y, i, solve);
 
 			break;
 		}

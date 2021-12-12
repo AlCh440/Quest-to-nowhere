@@ -159,6 +159,7 @@ bool Map::CreateWalkabilityMap(int& width, int& height, uchar** buffer) const
 
 		if (layer->properties.GetProperty("Col", 0) == 0)
 			continue;
+		
 
 		uchar* map = new uchar[layer->width * layer->height];
 		memset(map, 1, layer->width * layer->height);
@@ -168,20 +169,28 @@ bool Map::CreateWalkabilityMap(int& width, int& height, uchar** buffer) const
 			for (int x = 0; x < mapData.width; ++x)
 			{
 				int i = (y * layer->width) + x;
+				int gid = layer->Get(x, y);
 
-				int tileId = layer->Get(x, y);
-				TileSet* tileset = (tileId > 0) ? GetTilesetFromTileId(tileId) : NULL;
+				//TileSet* tileId = GetTilesetFromTileId(gid);
 
-				if (tileset != NULL)
+				if (gid != NULL)
 				{
-					map[i] = (tileId - tileset->firstgid) > 0 ? 0 : 1;
+					if (gid > 0)
+					{
+						LOG("YES");
+						map[i] = 0;
+					}
+				}
+				else
+				{
+					map[i] = 1;
 				}
 			}
 		}
 
 		*buffer = map;
 		width = mapData.width;
-		height = mapData.height;
+ 		height = mapData.height;
 		ret = true;
 
 		break;
@@ -310,7 +319,7 @@ bool Map::Load(const char* filename)
 				// L04: DONE 9: Complete the draw function
 				int gid = mapLayerItem->data->Get(x, y);
 
-				if (mapLayerItem->data->properties.GetProperty("Col", 1)) {
+				if (mapLayerItem->data->properties.GetProperty("Col", 1) || mapLayerItem->data->properties.GetProperty("Col", 2)) {
 
 					//L06: TODO 4: Obtain the tile set using GetTilesetFromTileId
 					//now we always use the firt tileset in the list
@@ -372,7 +381,7 @@ bool Map::Load(const char* filename)
 						SDL_Rect r = tileset->GetTileRect(gid);
 						iPoint pos = MapToWorld(x, y);
 
-						app->enemy->AddEnemy(pos.x, pos.y, 0);
+						app->enemy->AddEnemy(pos.x, pos.y, 0, false);
 					}
 
 
@@ -383,7 +392,7 @@ bool Map::Load(const char* filename)
 						SDL_Rect r = tileset->GetTileRect(gid);
 						iPoint pos = MapToWorld(x, y);
 
-						app->enemy->AddEnemy(pos.x, pos.y, 1);
+						app->enemy->AddEnemy(pos.x, pos.y, 1, false);
 					}
 				}
 			}
@@ -533,6 +542,57 @@ bool Map::LoadAllLayers(pugi::xml_node mapNode) {
 	}
 
 	return ret;
+}
+
+void Map::LoadenemiesLvl()
+{
+	bool ret = false;
+	ListItem<MapLayer*>* item;
+	item = mapData.maplayers.start;
+
+	for (item = mapData.maplayers.start; item != NULL; item = item->next)
+	{
+		MapLayer* layer = item->data;
+
+		if (layer->properties.GetProperty("En", 0) == 0)
+			continue;
+
+
+		for (int y = 0; y < mapData.height; ++y)
+		{
+			for (int x = 0; x < mapData.width; ++x)
+			{
+				int i = (y * layer->width) + x;
+				int gid = layer->Get(x, y);
+
+				if (gid == 791)
+				{
+					TileSet* tileset = GetTilesetFromTileId(gid);
+
+					SDL_Rect r = tileset->GetTileRect(gid);
+					iPoint pos = MapToWorld(x, y);
+
+					app->enemy->AddEnemy(pos.x, pos.y, 0, false);
+				}
+
+
+				if (gid == 1002)
+				{
+					TileSet* tileset = GetTilesetFromTileId(gid);
+
+					SDL_Rect r = tileset->GetTileRect(gid);
+					iPoint pos = MapToWorld(x, y);
+
+					app->enemy->AddEnemy(pos.x, pos.y, 1, false);
+				}
+			}
+		}
+
+
+		break;
+	}
+
+	
 }
 
 // L06: TODO 6: Load a group of properties from a node and fill a list with it

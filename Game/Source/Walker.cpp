@@ -8,14 +8,17 @@
 #include "Enemy.h"
 #include "Scene.h"
 
+#include "Point.h"
 #include "Defs.h"
 #include "Log.h"
 #include "App.h"
 
-Walker::Walker(int x, int y)
+Walker::Walker(int x, int y, int name_, bool hardSolve)
 {
     position.x = x;
     position.y = y;
+    
+    name = name_;
 
     Start();
 }
@@ -81,10 +84,10 @@ bool Walker::Update(float dt)
     iPoint dest = app->map->WorldToMap(app->player->player.x, app->player->player.y);
     app->pathfinding->CreatePath(pos, dest);
 
-    if (walker_state == 1)
+    if (walker_state == 1 && !app->player->die)
     {
         const DynArray<iPoint>* path = app->pathfinding->GetLastPath();
-        if ((path->At(path->Count() - 1)->DistanceManhattan(pos) < 7))
+        if ((path->At(path->Count() - 1)->DistanceManhattan(pos) < 8))
         {
             if (path->At(1) != nullptr)
             {
@@ -98,20 +101,11 @@ bool Walker::Update(float dt)
                     position.x++;
                     direction = 1;
                 }
-
-                if (path->At(1)->y < pos.y)
-                {
-                    position.y--;
-                    direction = 2;
-                }
-                else if (path->At(1)->y > pos.y)
-                {
-                    position.y++;
-                    direction = 3;
-                }
             }
         }
     }
+
+    gravity();
 
     if (formation.HasFinished()) walker_state = 1;
     
@@ -137,18 +131,47 @@ bool Walker::PostUpdate()
 
 void Walker::gravity()
 {
+    position.y++;
 }
 
 
 bool Walker::CleanUp()
 {
-    return false;
+    
+    return true;
 }
 
-void Walker::SolveColl()
+void Walker::SolveColl(SDL_Rect rect)
 {
-    if (direction == 0) position.x += 2;
-    else if (direction == 1) position.x -= 2;
+    if (rect.y < position.y + 16) position.y--;
+    //else if (direction == 0) position.x += 2;
+    //else if (direction == 1) position.x -= 2;
     else if (direction == 2) position.y += 2;
     else if (direction == 3) position.y -= 2;
+
 }
+
+void Walker::SolveCollHard(SDL_Rect rect)
+{
+    position.x = rect.x - 5 - 16;
+    position.y = rect.y - 5 - 16;
+
+    direction = 4;
+    hardColl = false;
+}
+
+iPoint Walker::GetPosition()
+{
+    return position;
+}
+
+int  Walker::GetName()
+{
+    return name;
+}
+
+bool Walker::GetSolveHard()
+{
+    return hardColl;
+}
+

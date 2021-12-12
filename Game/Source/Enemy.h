@@ -4,6 +4,7 @@
 #include "App.h"
 #include "Animation.h"
 
+#include "Point.h"
 #include "SDL/include/SDL.h"
 
 
@@ -37,19 +38,49 @@ public:
 	void OnCollision(Collider* c1, Collider* c2);
 
 	// Load / Save
-	bool LoadState(pugi::xml_node&);
-	bool SaveState(pugi::xml_node&) const;
+	virtual bool LoadState(pugi::xml_node&)
+	{
+		return true;
+	}
 
-	bool CleanUp();
+	virtual bool SaveState(pugi::xml_node&) const
+	{
+		return true;
+	}
 
-	virtual void SolveColl()
+	bool CleanUp()
+	{
+		return true;
+	}
+
+	virtual void SolveColl(SDL_Rect rect)
 	{
 
+	}
+
+	virtual void SolveCollHard(SDL_Rect rect)
+	{
+
+	}
+	
+	virtual bool GetSolveHard() 
+	{
+		return bool();
 	}
 
 	SDL_Rect player;
 
 	bool pendingToDelete;
+
+	virtual iPoint GetPosition()
+	{
+		return iPoint();
+	}
+
+	virtual int GetName()
+	{
+		return int();
+	}
 
 	//Collider* hit_bat;
 private:

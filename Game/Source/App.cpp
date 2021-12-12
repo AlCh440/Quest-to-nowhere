@@ -23,7 +23,7 @@
 // Constructor
 App::App(int argc, char* args[]) : argc(argc), args(args)
 {
-	frames = 0;
+	frameCount = 0;
 	start_preupdate = true;
 	stop_update = false;
 
@@ -42,6 +42,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
 	AddModule(win);
+	AddModule(coll);
 	AddModule(input);
 	AddModule(tex);
 	AddModule(audio);
@@ -50,10 +51,14 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(player);
 	AddModule(enemy);
 	AddModule(pathfinding);
-	AddModule(coll);
+	
 
 	// Render last to swap buffer
 	AddModule(render);
+
+	ptimer = new PerfTimer();
+	frameDuration = new PerfTimer();
+	cappFrames = false;
 }
 
 // Destructor
@@ -188,6 +193,13 @@ pugi::xml_node App::LoadConfig(pugi::xml_document& configFile) const
 // ---------------------------------------------
 void App::PrepareUpdate()
 {
+	frameCount++;
+	lastSecFrameCount++;
+
+	// L08: DONE 4: Calculate the dt: differential time since last frame
+	dt = frameDuration->ReadMs();
+	frameDuration->Start();
+
 	start = SDL_GetTicks();
 }
 
@@ -197,11 +209,52 @@ void App::FinishUpdate()
 	if (loadGameRequested == true) LoadGame();
 	if (saveGameRequested == true) SaveGame();
 
+	float secondsSinceStartup = startupTime.ReadSec();
 
+	if (lastSecFrameTime.Read() > 1000) {
+		lastSecFrameTime.Start();
+		framesPerSecond = lastSecFrameCount;
+		lastSecFrameCount = 0;
+		averageFps = (averageFps + framesPerSecond) / 2;
+	}
+
+	static char title[256];
+
+	if (render->usingVsync)
+	{
+		sprintf_s(title, 256, "Av.FPS: %.2f Last sec frames: %i Last dt: %.3f Using vsync: true",
+			averageFps, framesPerSecond, dt);
+	}
+	else
+	{
+
+		sprintf_s(title, 256, "Av.FPS: %.2f Last sec frames: %i Last dt: %.3f Using vsync: false",
+			averageFps, framesPerSecond, dt);
+	}
+
+	if (app->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
+	{
+		!cappFrames;
+	}
+
+	if (cappFrames)
+	{
+		if ((1000 / (30)) > SDL_GetTicks() - start) SDL_Delay((1000 / (30)) - (SDL_GetTicks() - start));
+	}
+	else if (!cappFrames)
+	{
+		if ((1000 / FPS) > SDL_GetTicks() - start) SDL_Delay(1000 / FPS - (SDL_GetTicks() - start));
+	}
+	
 	// Keeping the game at FPS 
-	if ((1000 / FPS) > SDL_GetTicks() - start) SDL_Delay(1000 / FPS - (SDL_GetTicks() - start));
 
+	float delay = float(maxFrameRate) - frameDuration->ReadMs();
+	PerfTimer* delayt = new PerfTimer();
+	delayt->Start();
+	if (maxFrameRate > 0 && delay > 0) SDL_Delay(delay);
+	LOG("Expected %f milliseconds and the real delay is % f", delay, delayt->ReadMs());
 
+	app->win->SetTitle(title);
 }
 
 // Call modules before each loop iteration

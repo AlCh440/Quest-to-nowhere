@@ -25,10 +25,14 @@ public:
 
 	bool PostUpdate();
 
+	bool LoadState(pugi::xml_node&);
+	bool SaveState(pugi::xml_node&) const;
+
 	bool CleanUp();
 
+	void StartLvl();
 
-	Enemy* AddEnemy(int x, int y, int enemy);
+	Enemy* AddEnemy(int x, int y, int enemy, bool solve);
 
 	void DebugDraw();
 

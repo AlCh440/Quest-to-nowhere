@@ -35,10 +35,10 @@ bool Window::Awake(pugi::xml_node& config)
 		// Create window
 		// L01: DONE 6: Load all required configurations from config.xml
 		Uint32 flags = SDL_WINDOW_SHOWN;
-		bool fullscreen = config.child("fullscreen").attribute("value").as_bool(false);
-		bool borderless = config.child("borderless").attribute("value").as_bool(false);
-		bool resizable = config.child("resizable").attribute("value").as_bool(false);
-		bool fullscreen_window = config.child("fullscreen_window").attribute("value").as_bool(false);
+		bool fullscreen = config.child("fullscreen").attribute("value").as_bool();
+		bool borderless = config.child("borderless").attribute("value").as_bool();
+		bool resizable = config.child("resizable").attribute("value").as_bool();
+		bool fullscreen_window = config.child("fullscreen_window").attribute("value").as_bool();
 
 		scale = config.child("resolution").attribute("scale").as_int();
 		width = config.child("resolution").attribute("width").as_int() * scale;

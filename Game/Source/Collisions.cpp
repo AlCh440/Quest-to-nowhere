@@ -33,7 +33,7 @@ Collisions::Collisions() : Module()
 	matrix[Collider::Type::PLAYER][Collider::Type::CAM] = true;
 	matrix[Collider::Type::PLAYER][Collider::Type::WIN] = true;
 	matrix[Collider::Type::PLAYER][Collider::Type::LOSE] = true;
-	matrix[Collider::Type::PLAYER][Collider::Type::ENEMY] = false;
+	matrix[Collider::Type::PLAYER][Collider::Type::ENEMY] = true;
 
 
 	matrix[Collider::Type::PLAT][Collider::Type::WALL] = false;
@@ -82,7 +82,7 @@ Collisions::Collisions() : Module()
 	matrix[Collider::Type::LOSE][Collider::Type::ENEMY] = false;
 
 	matrix[Collider::Type::ENEMY][Collider::Type::WALL] = true;
-	matrix[Collider::Type::ENEMY][Collider::Type::PLAYER] = false;
+	matrix[Collider::Type::ENEMY][Collider::Type::PLAYER] = true;
 	matrix[Collider::Type::ENEMY][Collider::Type::PLAT] = true;
 	matrix[Collider::Type::ENEMY][Collider::Type::NEAR] = false;
 	matrix[Collider::Type::ENEMY][Collider::Type::CAM] = false;
@@ -276,10 +276,13 @@ void Collisions::RemoveColliderType(Collider::Type type)
 {
 	for (uint i = 0; i < MAX_COLLIDERS; ++i)
 	{
-		if (colliders[i]->type == type)
+		if (colliders[i] != NULL)
 		{
-			delete colliders[i];
-			colliders[i] = nullptr;
+			if (colliders[i]->type == type)
+			{
+				delete colliders[i];
+				colliders[i] = nullptr;
+			}
 		}
 	}
 }

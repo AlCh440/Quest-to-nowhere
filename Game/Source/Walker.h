@@ -11,7 +11,7 @@
 class Walker : public Enemy
 {
 public:
-	Walker(int x, int y);
+	Walker(int x, int y, int name_, bool hardSolve);
 
 	virtual ~Walker();
 	bool Start();
@@ -24,11 +24,23 @@ public:
 
 	bool CleanUp();
 
-	void SolveColl();
+	void SolveColl(SDL_Rect rect);
+
+	void SolveCollHard(SDL_Rect rect);
 
 	SDL_Rect player;
 
 	Collider* hit_bat;
+
+	iPoint GetPosition();
+
+	int  GetName();
+
+	bool GetSolveHard();
+
+	bool hardColl;
+	int name;
+
 private:
 
 	SDL_Texture* walker_sprite;

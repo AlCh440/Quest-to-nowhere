@@ -33,6 +33,11 @@ bool Render::Awake(pugi::xml_node& config)
 	{
 		flags |= SDL_RENDERER_PRESENTVSYNC;
 		LOG("Using vsync");
+		usingVsync = true;
+	}
+	else
+	{
+		usingVsync = false;
 	}
 
 	renderer = SDL_CreateRenderer(app->win->window, -1, flags);

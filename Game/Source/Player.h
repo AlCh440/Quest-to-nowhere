@@ -23,7 +23,7 @@ public:
 	bool Update(float dt);
 	bool PostUpdate();
 
-	void gravity();
+	void gravity(float dt);
 
 	void OnCollision(Collider* c1, Collider* c2) override;
 	
@@ -36,7 +36,7 @@ public:
 	void StartLvl();
 
 	SDL_Rect player;
-
+	bool die;
 private:
 
 	SDL_Texture *idle_player;
@@ -44,16 +44,17 @@ private:
 	Animation left_idle;
 	Animation right_running;
 	Animation left_running;
+	Animation dying;
 
 	Animation* current_animation;
 	int direction;
 	bool is_moving;
 
 	
-	iPoint momentum;
-	iPoint max_momentum;
+	fPoint momentum;
+	fPoint max_momentum;
 
-	int gravity_;
+	float gravity_;
 
 
 	Collider* hit_player;
@@ -66,7 +67,7 @@ private:
 	bool can_move_left;
 	bool can_move_down;
 	bool can_jump;
-
+	bool can_double_jump;
 	int playerframescounter;
 };
 

@@ -14,7 +14,7 @@ struct vec2 {
 class Bat : public Enemy
 {
 public:
-	Bat(int x, int y);
+	Bat(int x, int y, int name_, bool hardSolve);
 
 	virtual ~Bat();
 	bool Start();
@@ -27,11 +27,24 @@ public:
 
 	bool CleanUp();
 
-	void SolveColl();
+	void SolveColl(SDL_Rect rect);
+
+	void SolveCollHard(SDL_Rect rect);
 
 	SDL_Rect player;
 
+	iPoint GetPosition();
+
+	int GetName();
+
+	bool GetSolveHard();
+
+	int name;
+
 	Collider* hit_bat;
+
+	bool hardColl;
+
 private:
 
 	SDL_Texture* bat_sprite;

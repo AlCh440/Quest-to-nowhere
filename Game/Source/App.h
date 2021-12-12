@@ -3,7 +3,8 @@
 
 #include "Module.h"
 #include "List.h"
-
+#include "PerfTimer.h"
+#include "Timer.h"
 #include "PugiXml/src/pugixml.hpp"
 
 #define CONFIG_FILENAME		"config.xml"
@@ -101,6 +102,7 @@ public:
 	Uint32 start;
 	bool start_preupdate;
 	bool stop_update;
+	bool cappFrames;
 
 private:
 
@@ -119,8 +121,25 @@ private:
 	pugi::xml_node config;
 	pugi::xml_node configApp;
 
-	uint frames;
-	float dt;
+
+
+	PerfTimer* ptimer;
+	PerfTimer* frameDuration;
+
+	Timer startupTime;
+	Timer frameTime;
+	Timer lastSecFrameTime;
+
+	uint64 frameCount = 0;
+	uint32 framesPerSecond = 0;
+	uint32 lastSecFrameCount = 0;
+
+	float averageFps = 0.0f;
+	float dt = 0.0f;
+
+	
+
+	uint32 maxFrameRate = 0;
 
 	// L02: DONE 1: Create variables to control when to execute the request load / save
 	mutable bool saveGameRequested;

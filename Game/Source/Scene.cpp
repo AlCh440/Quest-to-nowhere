@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "Collisions.h"
 #include "Pathfinding.h"
+#include "EnemyController.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -71,7 +72,6 @@ bool Scene::PreUpdate()
 			//reset player and camera
 			app->player->StartLvl();
 			
-			
 
 			// stop_game
 			stop_game = false;
@@ -93,8 +93,10 @@ bool Scene::Update(float dt)
 	else stop_input = false;
 
 	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+	{
 		app->player->StartLvl();
-
+		app->enemy->StartLvl();
+	}
 	if ((app->input->GetKey(SDL_SCANCODE_L) || app->input->GetKey(SDL_SCANCODE_F6)) == KEY_DOWN) 
 		app->LoadGameRequest();
 	
@@ -113,19 +115,34 @@ bool Scene::Update(float dt)
 	if(app->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		app->render->camera.x += 8;
 
-	// UPDATING CAM
+	if (app->input->GetKey(SDL_SCANCODE_F11) == KEY_DOWN)
+	{
+		if (app->cappFrames == false) app->cappFrames = true;
+		else app->cappFrames = false;
+	}
+
+	if (app->player->die)
+	{
+		if (app->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+		{
+					// RESET LEVEL
+
+			// DELETE ENEMIES
+			app->enemy->CleanUp();
+			// CREATE ENEMIES
+			app->enemy->StartLvl();
+			// RESTART PLAYER
+			app->player->StartLvl();
+			// RESTART CAMERA
+
+		}
+	}
 
 
 	// Draw map
 	app->map->Draw();
 
-	// L03: DONE 7: Set the window title with map/tileset info
-	SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d",
-		app->map->mapData.width, app->map->mapData.height,
-		app->map->mapData.tileWidth, app->map->mapData.tileHeight,
-		app->map->mapData.tilesets.Count());
 
- 	app->win->SetTitle(title.GetString());
 
 	if (win_con && stop_game)
 	{
@@ -195,6 +212,7 @@ void Scene::OnCollision(Collider* c1, Collider* c2)
 
 	if (c1->type == Collider::Type::ENEMY)
 	{
-		c1->point->SolveColl();
+		if (c1->point->GetSolveHard()) c1->point->SolveCollHard(c2->rect);
+		else c1->point->SolveColl(c2->rect);
 	}
 }
